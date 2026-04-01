@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void onItemTapped(int index){
     setState(() {
-      index = selectindex;
+      selectindex = index;
     });
     print('Navegation item tapped: $index');
   }
@@ -95,12 +95,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-  Widget _buildNavItem(IconData icon, String label, int Index){
-    final isSelected = selectindex == Index;
+  Widget _buildNavItem(IconData icon, String label, int index){
+    final isSelected = selectindex == index;
     final Color = isSelected ? primary : Colors.grey;
 
     return InkWell(
-      onTap: () => onItemTapped(Index),
+      onTap: () => onItemTapped(index),
       borderRadius: BorderRadius.circular(12),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -159,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 class _HomePageContent extends StatelessWidget{
-  const _HomePageContent ({super.key});
+  const _HomePageContent ();
 
 
   @override
