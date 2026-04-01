@@ -53,10 +53,125 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.transparent, 
       ),
 
-      body: Center(
-        
-      ),
+      body: const _HomePageContent(),
+
+      bottomNavigationBar: _buildBottomNavigationBar(),
+      floatingActionButton: _buildFloatingActionButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
 
     );
   }
+  
+  Widget _buildBottomNavigationBar(){
+    return Container(
+      decoration: const BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black,
+            blurRadius: 10,
+            offset: Offset(0,-2)
+          )
+        ]
+      ),
+      child: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 10,
+        color: Colors.white,
+        elevation: 0,
+        child: SizedBox(
+          height: 65,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildNavItem(Icons.home, 'Home', 0),
+              _buildNavItem(Icons.wallet, 'Account', 1),
+              const SizedBox(width: 40),
+              _buildNavItem(Icons.folder, 'Apply', 3),
+              _buildNavItem(Icons.more_horiz, 'More', 4),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  Widget _buildNavItem(IconData icon, String label, int Index){
+    final isSelected = selectindex == Index;
+    final Color = isSelected ? primary : Colors.grey;
+
+    return InkWell(
+      onTap: () => onItemTapped(Index),
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: Color, size: 24),
+            const SizedBox(height: 4),
+            Text(
+              label, 
+              style: TextStyle(
+                color: Color,
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
+            )
+          ],
+        ),
+        ),
+    );
+  }
+
+  Widget _buildFloatingActionButton() {
+    return Container(
+      width: 65,
+      height: 65,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: const LinearGradient(
+          colors:[primary, secondary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: secondary,
+            blurRadius: 10,
+            offset: const Offset(0, 4)
+          )
+        ]
+
+      ),
+      child: FloatingActionButton(
+        onPressed: () => onItemTapped(2),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: const Icon(
+          Icons.qr_code_scanner,
+          color: Colors.white,
+          size: 28,
+        ),
+      ),
+    );
+  }
 }
+
+
+class _HomePageContent extends StatelessWidget{
+  const _HomePageContent ({super.key});
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    return const SingleChildScrollView(
+      child: Column(
+        children: [
+          
+        ],
+      ),
+    ) ;
+  }
+}
+
