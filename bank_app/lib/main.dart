@@ -24,6 +24,24 @@ class MyApp extends StatelessWidget {
 const Color primary = Color(0xFF141E30);
 const Color secondary = Color(0xFF243B55);
 
+class ActionItem {
+  final IconData icon;
+  final String label;
+  final Color iconColor;
+
+  const ActionItem({
+    required this.icon,
+    required this.label,
+    required this.iconColor,
+  });
+}
+
+const List<ActionItem> actionItems = [
+  ActionItem(icon: Icons.sync_alt, label: 'Transfer', iconColor: primary),
+  ActionItem(icon: Icons.wallet_outlined, label: 'Payment', iconColor: primary),
+  ActionItem(icon: Icons.shopping_cart_outlined, label: 'Shop', iconColor: primary),
+  ActionItem(icon: Icons.apps, label: 'Other', iconColor: primary),
+];
 
 
 
@@ -174,6 +192,7 @@ class _HomePageContent extends StatelessWidget{
           HeaderSection(),
           BankCardWidget(),
           ActionGridSection(),
+          TransactionHistorySection()
           
         ],
       ),
@@ -476,4 +495,123 @@ class ActionButton extends StatelessWidget {
   }
 }
 
+class TransactionHistorySection extends StatelessWidget {
+  const TransactionHistorySection({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      margin: const EdgeInsets.only(top: 4),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Column(
+          children: [
+            _buildSectionHeader(),
+            const SizedBox(height: 10),
+            Column(
+              children: List.generate(5, (index) => const TransactionRow()),
+            )
+          ],
+      ),),
+    );
+  }
+}
+
+// Section header with See All button
+Widget _buildSectionHeader() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      const Text(
+        'Transaction History',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+      ),
+      TextButton(
+        onPressed: () {}, 
+        child: const Text(
+          'See All',
+          style: TextStyle(fontSize: 16, color: primary, fontWeight: FontWeight.w600),
+        )
+      )
+    ],
+  );
+}
+
+//Single Transaction row with skeleton loading effect
+class TransactionRow extends StatelessWidget {
+  const TransactionRow({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          _buildIconPlaceholder(),
+          const SizedBox(width: 15),
+          _buildDetailsPlaceholder(),
+          const SkeletonContainer(width: 70, height: 16, radius: 4),
+        ],
+      ),
+    );
+  }
+}
+
+// Transaction icon placeholder
+Widget _buildIconPlaceholder() {
+  return Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.2),
+          spreadRadius: 1,
+          blurRadius: 3,
+          offset: const Offset(0, 1),
+        )
+      ]
+    ),
+    child: const SkeletonContainer(width: 24, height: 24, radius: 4),
+  );
+}
+
+//Transaction detail placeholder(title & category)
+Widget _buildDetailsPlaceholder() {
+  return Expanded(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        SkeletonContainer(width: 120, height: 16, radius: 4),
+        SizedBox(height: 5),
+        SkeletonContainer(width: 80, height: 14, radius: 4),
+      ],
+    )
+  );
+}
+class SkeletonContainer extends StatelessWidget {
+  final double width;
+  final double height;
+  final double radius;
+
+  const SkeletonContainer({
+    super.key,
+    required this.width,
+    required this.height,
+    this.radius = 8,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
+        borderRadius: BorderRadius.circular(radius),
+      ),
+    );
+  }
+}
