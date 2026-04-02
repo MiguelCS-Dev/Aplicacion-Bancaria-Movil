@@ -173,6 +173,7 @@ class _HomePageContent extends StatelessWidget{
         children: [
           HeaderSection(),
           BankCardWidget(),
+          ActionGridSection(),
           
         ],
       ),
@@ -393,4 +394,86 @@ class BankCardWidget extends StatelessWidget {
     );
   }
 }
+
+class ActionGridSection extends StatelessWidget {
+  const ActionGridSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey[100],
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'What would you like to do today?',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+            const SizedBox(height: 15),
+            GridView.count(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              crossAxisCount: 4,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 0.8,
+              children: actionItems.map((item) => ActionButton(item:item)).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ActionButton extends StatelessWidget {
+  final ActionItem item;
+
+  const ActionButton({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        print('Tapped ${item.label}');
+      },
+      borderRadius: BorderRadius.circular(15),
+
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 3,
+              offset: const Offset(0, 1),
+            )
+          ]
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(item.icon, color: item.iconColor, size: 30),
+            const SizedBox(height: 8),
+            Text(
+              item.label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
