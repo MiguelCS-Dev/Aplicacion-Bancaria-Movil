@@ -55,15 +55,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
       body: const _HomePageContent(),
 
-      bottomNavigationBar: _buildBottomNavigationBar(),
-      floatingActionButton: _buildFloatingActionButton(),
+      bottomNavigationBar: buildBottomNavigationBar(),
+      floatingActionButton: buildFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
 
     );
   }
   
-  Widget _buildBottomNavigationBar(){
+  Widget buildBottomNavigationBar(){
     return Container(
       decoration: const BoxDecoration(
         boxShadow: [
@@ -84,18 +84,18 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildNavItem(Icons.home, 'Home', 0),
-              _buildNavItem(Icons.wallet, 'Account', 1),
+              buildNavItem(Icons.home, 'Home', 0),
+              buildNavItem(Icons.wallet, 'Account', 1),
               const SizedBox(width: 40),
-              _buildNavItem(Icons.folder, 'Apply', 3),
-              _buildNavItem(Icons.more_horiz, 'More', 4),
+              buildNavItem(Icons.folder, 'Apply', 3),
+              buildNavItem(Icons.more_horiz, 'More', 4),
             ],
           ),
         ),
       ),
     );
   }
-  Widget _buildNavItem(IconData icon, String label, int index){
+  Widget buildNavItem(IconData icon, String label, int index){
     final isSelected = selectindex == index;
     final Color = isSelected ? primary : Colors.grey;
 
@@ -123,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildFloatingActionButton() {
+  Widget buildFloatingActionButton() {
     return Container(
       width: 65,
       height: 65,
@@ -159,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 class _HomePageContent extends StatelessWidget{
-  const _HomePageContent ();
+  const _HomePageContent ({super.key});
 
 
   @override
@@ -168,6 +168,7 @@ class _HomePageContent extends StatelessWidget{
     return const SingleChildScrollView(
       child: Column(
         children: [
+          HeaderSection(),
           
         ],
       ),
@@ -175,3 +176,93 @@ class _HomePageContent extends StatelessWidget{
   }
 }
 
+class HeaderSection extends StatelessWidget{
+  const HeaderSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          height: 150,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [secondary, primary],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,)
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              buildTopBar(),
+              const SizedBox(height: 20),
+              buildGreeting()
+            ],
+          ),
+        )
+      ],
+    );
+
+  }
+
+  Widget buildTopBar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Bank',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold
+          ),
+        ),
+        Row(
+          children: [
+            buildCircleIcon(Icons.chat_bubble_outline),
+            const SizedBox(width: 8),
+            buildCircleIcon(Icons.notifications_none),
+          ],
+
+        )
+      ],
+    );
+  }
+
+  Widget buildCircleIcon(IconData icon){
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white.withOpacity(0.3),
+      ),
+      padding: const EdgeInsets.all(8),
+      child: Icon(icon, color: Colors.white, size: 20),
+    );
+  }
+
+  Widget buildGreeting(){
+    return Row(
+      children: [
+        const Icon(Icons.lock_outline, color: Colors.white,size: 24),
+        const SizedBox(width: 8),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const[
+            Text(
+              'Good Morning',
+              style: TextStyle(color: Colors.white70, fontSize: 14),
+            ),
+            Text(
+              'Mr User',
+              style: TextStyle(color:  Colors.white70, fontSize: 18, fontWeight: FontWeight.bold),
+            )
+          ],
+        )
+      ],
+    );
+  }
+}
