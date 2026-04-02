@@ -169,6 +169,7 @@ class _HomePageContent extends StatelessWidget{
       child: Column(
         children: [
           HeaderSection(),
+          BankCardWidget(),
           
         ],
       ),
@@ -265,4 +266,128 @@ class HeaderSection extends StatelessWidget{
       ],
     );
   }
+
+  
 }
+
+class BankCardWidget extends StatelessWidget {
+  const BankCardWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+      padding: const EdgeInsets.all(20),
+      height: 250,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        gradient: const LinearGradient(
+          colors: [primary, secondary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          )
+        ]
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildCardTop(),
+          _buildBalanceDisplay(),
+          _buildCardNumber(),
+          _buildCardDetails(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCardTop() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Icon(Icons.credit_card, size: 40, color: Colors.orange),
+        const Text(
+          'VISA', 
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 28,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.w900,
+            shadows: [
+              Shadow(
+                blurRadius: 5,
+                color: Colors.black54,
+                offset: Offset(1, 1),
+              )
+            ]
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildBalanceDisplay() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        Text(
+          'Available Balance',
+          style: TextStyle(color: Colors.white70, fontSize: 12),
+        ),
+        SizedBox(height: 4),
+        Text(
+          '\$1,234.50',
+          style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
+        )
+      ],
+    );
+  }
+
+  Widget _buildCardNumber() {
+    return const Text(
+      '**** **** **** 1234',
+      style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 4),
+    );
+  }
+
+  Widget _buildCardDetails() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text(
+              'Card Holder',
+              style: TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+            Text(
+              'User',
+              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: const [
+            Text(
+              'Expires',
+              style: TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+            Text(
+              '12/26',
+              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+            )
+          ],
+        )
+      ],
+    );
+  }
+}
+
