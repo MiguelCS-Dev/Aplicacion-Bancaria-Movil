@@ -7,14 +7,14 @@ import 'package:bank_app/features/auth/domain/usecases/register_user.dart';
 import 'package:bank_app/features/auth/domain/usecases/reset_password.dart';
 import 'package:bank_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:bank_app/features/auth/presentation/bloc/auth_event.dart';
-import 'package:bank_app/features/auth/presentation/pages/auth_page.dart';
-import 'package:bank_app/features/home/presentation/pages/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'core/routes/app_router.dart';
+
 
 
 void main() async{
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
+         BlocProvider(
           create: (_) => AuthBloc(
             loginUser: LoginUser(repository),
             registerUser: RegisterUser(repository),
@@ -53,9 +53,14 @@ class MyApp extends StatelessWidget {
           )..add(CheckAuthStatusEvent()),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: const AuthScreen(),
+      child: Builder(
+        builder: (context) {
+          final router = AppRouter.createRouter(context);
+          return MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            routerConfig: router,
+          );
+        },
       ),
     );
   }
