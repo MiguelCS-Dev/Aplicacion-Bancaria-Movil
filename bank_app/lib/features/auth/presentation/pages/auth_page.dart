@@ -3,11 +3,7 @@ import 'package:bank_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:bank_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bank_app/features/home/presentation/pages/home_page.dart';
-
-
-const Color primaryBlue = Color(0xFF1E3A8A);
-const Color secondaryBlue = Color(0xFF4C1D95);
+import 'package:bank_app/core/themes/app_colors.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -61,7 +57,7 @@ class _AuthScreenState extends State<AuthScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.green,
+        backgroundColor: primary,
         behavior: SnackBarBehavior.floating,
       )
     );
@@ -109,27 +105,13 @@ void _resetPassword() {
     } else if (state is AuthSuccess) {
       setState(() => isLoading = false);
       _showSuccessSnackbar('Welcome!');
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const MyHomePage(),
-        ),
-      );
-    } else if (state is AuthInitial) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const AuthScreen(),
-        ),
-      );
-    }else if (state is AuthError) {
-      setState(() => isLoading = false);
-      _showErrorDialog(state.message);
     }
   },
   child: Scaffold(
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [secondaryBlue, primaryBlue],
+            colors: [secondary, primary],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           )
@@ -209,7 +191,7 @@ void _resetPassword() {
             Text(
               isLogin ? 'Sign In' : 'Sign Up',
               style: const TextStyle(
-                fontSize: 24, fontWeight: FontWeight.bold, color: primaryBlue,
+                fontSize: 24, fontWeight: FontWeight.bold, color: primary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -275,7 +257,7 @@ void _resetPassword() {
                   child: const Text(
                     'Forgot Password?',
                     style: TextStyle(
-                      color: primaryBlue,
+                      color: primary,
                       fontWeight: FontWeight.w600,
                     ),
                   )
@@ -308,7 +290,7 @@ void _resetPassword() {
       validator: validator,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: primaryBlue),
+        prefixIcon: Icon(icon, color: primary),
         suffixIcon: isPassword
           ? IconButton(
             onPressed: () {
@@ -331,7 +313,7 @@ void _resetPassword() {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: primaryBlue, width: 2),
+          borderSide: const BorderSide(color: primary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -348,14 +330,14 @@ void _resetPassword() {
       height: 55,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [primaryBlue, secondaryBlue],
+          colors: [primary, secondary],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: primaryBlue.withOpacity(0.3),
+            color: primary.withOpacity(0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           )
@@ -402,7 +384,7 @@ void _resetPassword() {
           child: Text(
             isLogin ? 'Sign Up' : 'Sign In',
             style: const TextStyle(
-              color: primaryBlue,
+              color: primary,
               fontWeight: FontWeight.bold,
             ),
           )
