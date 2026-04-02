@@ -21,8 +21,11 @@ class MyApp extends StatelessWidget {
   }
 }
 
-const Color primary = Color(0xFF10B981);
-const Color secondary = Color(0xFF34D399);
+const Color primary = Color(0xFF141E30);
+const Color secondary = Color(0xFF243B55);
+
+
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
