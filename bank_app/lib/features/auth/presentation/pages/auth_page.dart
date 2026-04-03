@@ -217,7 +217,7 @@ void _resetPassword() {
                   return null;
                 }
               )
-            ],
+            ], const SizedBox(height: 16),
 
             //Email field
             _buildTextField(
