@@ -23,21 +23,21 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 231, 231, 231),
-      appBar: AppBar(
-        toolbarHeight: 0,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),
-      body: const HomePageContent(),
-      bottomNavigationBar: BottomNavbar(
-        selectedIndex: selectedIndex,
-        onTap: onItemTapped,
-      ),
-      floatingActionButton: FabButton(
-        onTap: () => onItemTapped(2),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    );
-  }
+        backgroundColor: const Color.fromARGB(255, 231, 231, 231),
+        appBar: AppBar(
+          toolbarHeight: 0,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+        ),
+        body: const HomePageContent(),
+        bottomNavigationBar: BottomNavbar(
+          selectedIndex: selectedIndex,
+          onTap: onItemTapped,
+        ),
+        floatingActionButton: FabButton(
+          onTap: () => onItemTapped(2),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        );
+    }
 }
