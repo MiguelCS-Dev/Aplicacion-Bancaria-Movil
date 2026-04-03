@@ -6,6 +6,8 @@ class AuthLoading extends AuthState {}
 
 class AuthSuccess extends AuthState {}
 
+class PasswordResetSuccess extends AuthState {}
+
 class AuthError extends AuthState {
   final String message;
 

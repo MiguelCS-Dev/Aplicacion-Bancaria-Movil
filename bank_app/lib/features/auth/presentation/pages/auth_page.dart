@@ -105,7 +105,14 @@ void _resetPassword() {
     } else if (state is AuthSuccess) {
       setState(() => isLoading = false);
       _showSuccessSnackbar('Welcome!');
-    }
+    } else if (state is AuthError) {
+      setState(() => isLoading = false);
+      _showErrorDialog(state.message);
+    } else if (state is PasswordResetSuccess) {
+      setState(() => isLoading = false);
+      _showSuccessSnackbar('Password reset email sent!');
+}
+
   },
   child: Scaffold(
       body: Container(

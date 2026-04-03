@@ -6,6 +6,7 @@ import '../../domain/usecases/register_user.dart';
 import '../../domain/usecases/reset_password.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUser loginUser;
@@ -26,8 +27,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await loginUser(event.email, event.password);
         emit(AuthSuccess());
+      } on FirebaseAuthException catch (e) {
+        String errorMessage;
+
+        switch (e.code) {
+          case 'user-not-found':
+            errorMessage = 'No user found with this email.';
+            break;
+          case 'wrong-password':
+            errorMessage = 'Wrong password provided.';
+            break;
+          case 'invalid-email':
+            errorMessage = 'The email address is invalid.';
+            break;
+          default:
+            errorMessage = e.message ?? 'Login failed';
+        }
+
+        emit(AuthError(errorMessage));
       } catch (e) {
-        emit(AuthError(e.toString()));
+        emit(AuthError('An unexpected error occurred'));
       }
     });
 
@@ -52,7 +71,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
       try {
         await resetPassword(event.email);
-        emit(AuthSuccess());
+        emit(PasswordResetSuccess());
       } catch (e) {
         emit(AuthError(e.toString()));
       }
