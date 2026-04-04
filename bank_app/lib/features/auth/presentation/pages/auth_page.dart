@@ -159,7 +159,7 @@ void _resetPassword() {
         ),
         const SizedBox(height: 20),
         const Text(
-          'ED Bank',
+          'Bank',
           style: TextStyle(
             color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold,
             letterSpacing: 1.5,
