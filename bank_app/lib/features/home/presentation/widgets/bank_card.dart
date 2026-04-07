@@ -2,7 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:bank_app/core/themes/app_colors.dart';
 
 class BankCardWidget extends StatelessWidget {
-  const BankCardWidget({super.key});
+  final String balance;
+  final String cardNumber;
+  final String cardHolder;
+  final String expiryDate;
+
+  const BankCardWidget({
+    super.key,
+    required this.balance,
+    required this.cardNumber,
+    required this.cardHolder,
+    required this.expiryDate,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,17 +33,17 @@ class BankCardWidget extends StatelessWidget {
             color: Colors.black.withOpacity(0.25),
             blurRadius: 10,
             offset: const Offset(0, 5),
-          )
+          ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          _CardTop(),
-          _BalanceDisplay(),
-          _CardNumber(),
-          _CardDetails(),
+        children: [
+          const _CardTop(),
+          _BalanceDisplay(balance: balance),
+          _CardNumber(cardNumber: cardNumber),
+          _CardDetails(cardHolder: cardHolder, expiryDate: expiryDate),
         ],
       ),
     );
@@ -63,28 +74,34 @@ class _CardTop extends StatelessWidget {
 }
 
 class _BalanceDisplay extends StatelessWidget {
-  const _BalanceDisplay();
+  final String balance;
+
+  const _BalanceDisplay({required this.balance});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Available Balance',
-            style: TextStyle(color: Colors.white70, fontSize: 12)),
+        Text(balance, style: TextStyle(color: Colors.white70, fontSize: 12)),
         SizedBox(height: 4),
-        Text('\$1,234.50',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.bold)),
+        Text(
+          '\$9999',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ],
     );
   }
 }
 
 class _CardNumber extends StatelessWidget {
-  const _CardNumber();
+  final String cardNumber;
+
+  const _CardNumber({required this.cardNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +118,10 @@ class _CardNumber extends StatelessWidget {
 }
 
 class _CardDetails extends StatelessWidget {
-  const _CardDetails();
+  final String cardHolder;
+  final String expiryDate;
+
+  const _CardDetails({required this.cardHolder, required this.expiryDate});
 
   @override
   Widget build(BuildContext context) {
@@ -111,25 +131,35 @@ class _CardDetails extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Card Holder',
-                style: TextStyle(color: Colors.white70, fontSize: 12)),
-            Text('User',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500)),
+            Text(
+              'Card Holder',
+              style: TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+            Text(
+              'User',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text('Expires',
-                style: TextStyle(color: Colors.white70, fontSize: 12)),
-            Text('12/26',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500)),
+            Text(
+              'Expires',
+              style: TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+            Text(
+              '12/26',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
-        )
+        ),
       ],
     );
   }

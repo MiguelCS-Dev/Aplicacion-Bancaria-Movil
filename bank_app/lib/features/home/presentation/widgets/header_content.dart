@@ -5,7 +5,9 @@ import 'package:bank_app/core/themes/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HeaderSection extends StatelessWidget {
-  const HeaderSection({super.key});
+  final String userName;
+
+  const HeaderSection({super.key, required this.userName});
 
   @override
   Widget build(BuildContext context) {
@@ -74,11 +76,7 @@ class HeaderSection extends StatelessWidget {
           color: Colors.white.withOpacity(0.3),
         ),
         padding: const EdgeInsets.all(8),
-        child: const Icon(
-          Icons.logout,
-          color: Colors.white,
-          size: 20,
-        ),
+        child: const Icon(Icons.logout, color: Colors.white, size: 20),
       ),
     );
   }
@@ -94,6 +92,13 @@ class HeaderSection extends StatelessWidget {
     );
   }
 
+  String getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Good Morning';
+    if (hour < 18) return 'Good Afternoon';
+    return 'Good Evening';
+  }
+
   Widget _buildGreeting() {
     return Row(
       children: [
@@ -101,13 +106,13 @@ class HeaderSection extends StatelessWidget {
         const SizedBox(width: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
-              'Good Morning',
+              getGreeting(),
               style: TextStyle(color: Colors.white70, fontSize: 14),
             ),
             Text(
-              'Mr User',
+              userName,
               style: TextStyle(
                 color: Colors.white70,
                 fontSize: 18,
