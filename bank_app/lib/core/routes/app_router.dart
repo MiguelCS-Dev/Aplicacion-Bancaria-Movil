@@ -7,6 +7,8 @@ import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/auth/presentation/bloc/auth_state.dart';
 import '../../features/auth/presentation/pages/auth_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import 'package:bank_app/features/qr_payment/presentation/pages/qr_payment_page.dart';
+import 'package:bank_app/features/qr_payment/presentation/widgets/payment_confirmation_page.dart';
 
 class AppRouter {
   static GoRouter createRouter(BuildContext context) {
@@ -34,13 +36,11 @@ class AppRouter {
       },
 
       routes: [
+        GoRoute(path: '/', builder: (context, state) => const AuthScreen()),
+        GoRoute(path: '/home', builder: (context, state) => const MyHomePage()),
         GoRoute(
-          path: '/',
-          builder: (context, state) => const AuthScreen(),
-        ),
-        GoRoute(
-          path: '/home',
-          builder: (context, state) => const MyHomePage(),
+          path: '/qr-payment',
+          builder: (context, state) => const QrPaymentPage(),
         ),
       ],
     );

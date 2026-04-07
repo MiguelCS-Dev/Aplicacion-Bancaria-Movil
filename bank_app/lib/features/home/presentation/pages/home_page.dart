@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bank_app/features/home/presentation/widgets/home_content.dart';
 import 'package:bank_app/features/home/presentation/components/bottom_navbar.dart';
 import 'package:bank_app/features/home/presentation/components/fab_button.dart';
+import 'package:go_router/go_router.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -32,11 +33,12 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.transparent,
       ),
       body: HomePageContent(userName: user?.displayName ?? 'Usuario'),
-      bottomNavigationBar: BottomNavbar(
-        selectedIndex: selectedIndex,
-        onTap: onItemTapped,
+      bottomNavigationBar: const BottomNavbar(),
+      floatingActionButton: FabButton(
+        onTap: () {
+          context.push('/qr-payment');
+        },
       ),
-      floatingActionButton: FabButton(onTap: () => onItemTapped(2)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
