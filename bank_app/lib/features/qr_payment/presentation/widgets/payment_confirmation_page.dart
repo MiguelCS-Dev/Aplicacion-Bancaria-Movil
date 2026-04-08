@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/usecases/make_qr_payment.dart';
-import '../../data/repositories/qr_payment_repository_impl.dart';
-import '../../data/datasources/qr_remote_datasource.dart';
 import 'package:bank_app/core/themes/app_colors.dart';
 import '../../../../core/di/injection.dart';
 
@@ -149,6 +146,12 @@ class _PaymentConfirmationViewState extends State<_PaymentConfirmationView> {
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: primary,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: secondary),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
         body: SingleChildScrollView(
           child: Column(

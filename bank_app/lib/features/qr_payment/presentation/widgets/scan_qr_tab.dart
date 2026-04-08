@@ -5,8 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'payment_confirmation_page.dart';
 
-const Color primaryBlue = Color(0xFF1E3A8A);
-
 class ScanQrTab extends StatefulWidget {
   const ScanQrTab({super.key});
 

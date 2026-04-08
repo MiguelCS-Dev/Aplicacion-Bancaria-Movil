@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/app_colors.dart';
 import '../widgets/generate_qr_tab.dart';
 import '../widgets/scan_qr_tab.dart';
-
-const Color primaryBlue = Color(0xFF1E3A8A);
 
 class QrPaymentPage extends StatefulWidget {
   const QrPaymentPage({super.key});
@@ -33,9 +32,12 @@ class _QrPaymentPageState extends State<QrPaymentPage>
     return Scaffold(
       appBar: AppBar(
         title: const Text('QR Payment'),
-        backgroundColor: primaryBlue,
+        backgroundColor: primary,
         bottom: TabBar(
           controller: _tabController,
+          indicatorColor: Colors.white70,
+          labelColor: Colors.white70,
+          unselectedLabelColor: secondary,
           tabs: const [
             Tab(icon: Icon(Icons.qr_code), text: 'My QR'),
             Tab(icon: Icon(Icons.qr_code_scanner), text: 'Scan'),

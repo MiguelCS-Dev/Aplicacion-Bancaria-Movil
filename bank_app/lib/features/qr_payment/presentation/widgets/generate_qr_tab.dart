@@ -5,8 +5,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../domain/usecases/generate_qr_data.dart';
 
-const Color primaryBlue = Color(0xFF1E3A8A);
-
 class GenerateQrTab extends StatefulWidget {
   const GenerateQrTab({super.key});
 
@@ -48,7 +46,6 @@ class _GenerateQrTabState extends State<GenerateQrTab> {
       final userData = await _getUserData();
       if (userData == null) throw Exception('User data not found');
 
-      // 🔥 Clean Architecture
       final qrString = generateQrData(
         userId: user.uid,
         userName: userData['name'] ?? 'User',
