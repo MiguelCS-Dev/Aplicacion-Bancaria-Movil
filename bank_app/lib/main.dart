@@ -14,15 +14,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/routes/app_router.dart';
+import 'core/di/injection.dart' as di;
 
-
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await di.init();
 
   final dataSource = FirebaseAuthDataSource(
     FirebaseAuth.instance,
@@ -35,7 +34,7 @@ void main() async{
 }
 
 class MyApp extends StatelessWidget {
-   final AuthRepositoryImpl repository;
+  final AuthRepositoryImpl repository;
 
   const MyApp({super.key, required this.repository});
 
@@ -43,7 +42,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-         BlocProvider(
+        BlocProvider(
           create: (_) => AuthBloc(
             loginUser: LoginUser(repository),
             registerUser: RegisterUser(repository),
