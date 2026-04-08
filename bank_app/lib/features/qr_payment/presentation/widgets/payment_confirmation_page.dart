@@ -1,13 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/usecases/make_qr_payment.dart';
 import '../../data/repositories/qr_payment_repository_impl.dart';
 import '../../data/datasources/qr_remote_datasource.dart';
 import 'package:bank_app/core/themes/app_colors.dart';
+import '../../../../core/di/injection.dart';
 
-class PaymentConfirmationScreen extends StatefulWidget {
+import '../bloc/qr_payment_cubit.dart';
+import '../bloc/qr_payment_state.dart';
+
+class PaymentConfirmationScreen extends StatelessWidget {
   final String receiverUserId;
   final String receiverUserName;
 
@@ -18,30 +23,42 @@ class PaymentConfirmationScreen extends StatefulWidget {
   });
 
   @override
-  State<PaymentConfirmationScreen> createState() =>
-      _PaymentConfirmationScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => sl<QrPaymentCubit>(),
+
+      child: _PaymentConfirmationView(
+        receiverUserId: receiverUserId,
+        receiverUserName: receiverUserName,
+      ),
+    );
+  }
 }
 
-class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
+class _PaymentConfirmationView extends StatefulWidget {
+  final String receiverUserId;
+  final String receiverUserName;
+
+  const _PaymentConfirmationView({
+    required this.receiverUserId,
+    required this.receiverUserName,
+  });
+
+  @override
+  State<_PaymentConfirmationView> createState() =>
+      _PaymentConfirmationViewState();
+}
+
+class _PaymentConfirmationViewState extends State<_PaymentConfirmationView> {
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
 
-  bool _isProcessing = false;
   double? _senderBalance;
-
-  late MakeQrPayment makeQrPayment;
 
   @override
   void initState() {
     super.initState();
     _loadSenderBalance();
-
-    // Inicialización manual
-    final dataSource = QrPaymentRemoteDataSourceImpl(
-      FirebaseFirestore.instance,
-    );
-    final repository = QrPaymentRepositoryImpl(dataSource);
-    makeQrPayment = MakeQrPayment(repository);
   }
 
   @override
@@ -68,7 +85,7 @@ class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
     }
   }
 
-  Future<void> _confirmPayment() async {
+  void _confirmPayment() {
     if (_amountController.text.isEmpty) {
       ScaffoldMessenger.of(
         context,
@@ -91,146 +108,124 @@ class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
       return;
     }
 
-    setState(() {
-      _isProcessing = true;
-    });
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
 
-    try {
-      final currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser == null) throw Exception('User not logged in');
-
-      await makeQrPayment(
-        senderId: currentUser.uid,
-        receiverId: widget.receiverUserId,
-        amount: amount,
-        receiverName: widget.receiverUserName,
-        note: _noteController.text,
-      );
-
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Payment successful!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-
-      Navigator.pop(context, true);
-    } catch (e) {
-      setState(() {
-        _isProcessing = false;
-      });
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Payment failed: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
+    context.read<QrPaymentCubit>().makePayment(
+      senderId: currentUser.uid,
+      receiverId: widget.receiverUserId,
+      amount: amount,
+      receiverName: widget.receiverUserName,
+      note: _noteController.text,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: const Text(
-          'Confirm Payment',
-          style: TextStyle(color: Colors.white),
+    return BlocListener<QrPaymentCubit, QrPaymentState>(
+      listener: (context, state) {
+        if (state is QrPaymentSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Payment successful!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          Navigator.pop(context, true);
+        }
+
+        if (state is QrPaymentError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.grey[100],
+        appBar: AppBar(
+          title: const Text(
+            'Confirm Payment',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: primary,
         ),
-        backgroundColor: primary,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Recipient Card
-            Container(
-              margin: const EdgeInsets.all(20),
-              padding: const EdgeInsets.all(25),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: [primary, secondary]),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                children: [
-                  const Text('Pay to', style: TextStyle(color: Colors.white70)),
-                  const SizedBox(height: 10),
-                  const Icon(
-                    Icons.account_circle,
-                    size: 70,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(height: 15),
-                  Text(
-                    widget.receiverUserName,
-                    style: const TextStyle(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Recipient
+              Container(
+                margin: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(25),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(colors: [primary, secondary]),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  children: [
+                    const Text(
+                      'Pay to',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                    const SizedBox(height: 10),
+                    const Icon(
+                      Icons.account_circle,
+                      size: 70,
                       color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
                     ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Amount
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              padding: const EdgeInsets.all(25),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Enter Amount', style: TextStyle(fontSize: 18)),
-                  const SizedBox(height: 15),
-                  TextField(
-                    controller: _amountController,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    decoration: const InputDecoration(
-                      prefixText: '\$ ',
-                      hintText: '0.00',
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  if (_senderBalance != null)
+                    const SizedBox(height: 10),
                     Text(
-                      'Available balance: \$${_senderBalance!.toStringAsFixed(2)}',
+                      widget.receiverUserName,
+                      style: const TextStyle(color: Colors.white, fontSize: 22),
                     ),
-                  const SizedBox(height: 20),
-                  const Text('Note'),
-                  TextField(controller: _noteController, maxLines: 2),
-                ],
+                  ],
+                ),
               ),
-            ),
 
-            const SizedBox(height: 30),
-
-            // Button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ElevatedButton(
-                onPressed: _isProcessing ? null : _confirmPayment,
-                child: _isProcessing
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('Confirm Payment'),
+              // Amount
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _amountController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(labelText: 'Amount'),
+                    ),
+                    const SizedBox(height: 10),
+                    if (_senderBalance != null)
+                      Text('Balance: \$${_senderBalance!.toStringAsFixed(2)}'),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _noteController,
+                      decoration: const InputDecoration(labelText: 'Note'),
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            const SizedBox(height: 20),
-          ],
+              const SizedBox(height: 30),
+
+              // Button con Cubit
+              BlocBuilder<QrPaymentCubit, QrPaymentState>(
+                builder: (context, state) {
+                  final isLoading = state is QrPaymentLoading;
+
+                  return ElevatedButton(
+                    onPressed: isLoading ? null : _confirmPayment,
+                    child: isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text('Confirm Payment'),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

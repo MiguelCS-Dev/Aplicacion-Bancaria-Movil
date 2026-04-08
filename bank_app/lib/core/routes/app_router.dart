@@ -8,7 +8,6 @@ import '../../features/auth/presentation/bloc/auth_state.dart';
 import '../../features/auth/presentation/pages/auth_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import 'package:bank_app/features/qr_payment/presentation/pages/qr_payment_page.dart';
-import 'package:bank_app/features/qr_payment/presentation/widgets/payment_confirmation_page.dart';
 
 class AppRouter {
   static GoRouter createRouter(BuildContext context) {

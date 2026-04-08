@@ -17,7 +17,6 @@ class ScanQrTab extends StatefulWidget {
 class _ScanQrTabState extends State<ScanQrTab> {
   final MobileScannerController cameraController = MobileScannerController();
   bool _isProcessing = false;
-  bool _hasScanned = false;
   bool _scannerActive = true;
 
   @override
@@ -75,7 +74,6 @@ class _ScanQrTabState extends State<ScanQrTab> {
       }
 
       // reactivar scanner
-      _hasScanned = false;
       await cameraController.start();
     } finally {
       setState(() {
