@@ -4,6 +4,8 @@ import 'package:bank_app/features/transaction/data/repositories/transaction_repo
 import 'package:bank_app/features/transaction/domain/usecases/get_transaction.dart';
 import 'package:bank_app/features/transaction/presentation/bloc/transaction_cubit.dart';
 import 'package:bank_app/features/transaction/presentation/pages/transaction_page.dart';
+import 'package:bank_app/features/transaction_receipt/domain/entities/transaction_receipt.dart';
+import 'package:bank_app/features/transaction_receipt/presentation/pages/transaction_receipt_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +64,15 @@ class AppRouter {
 
               child: const TransactionPage(),
             );
+          },
+        ),
+        GoRoute(
+          path: '/receipt',
+          name: 'receipt',
+          builder: (context, state) {
+            final receipt = state.extra as TransactionReceipt;
+
+            return TransactionReceiptPage(receipt: receipt);
           },
         ),
       ],
