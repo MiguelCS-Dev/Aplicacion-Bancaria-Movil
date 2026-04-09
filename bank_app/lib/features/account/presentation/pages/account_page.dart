@@ -1,4 +1,6 @@
 import 'package:bank_app/core/themes/app_colors.dart';
+import 'package:bank_app/features/account/domain/entities/account_summary.dart';
+import 'package:bank_app/features/account/presentation/widgets/account_balance.dart';
 import 'package:bank_app/features/home/presentation/components/bottom_navbar.dart';
 import 'package:bank_app/features/home/presentation/components/fab_button.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,6 @@ import '../bloc/account_state.dart';
 
 import '../widgets/account_header.dart';
 import '../widgets/profile_section.dart';
-import '../widgets/spending_overview.dart';
 import '../widgets/invite_friends.dart';
 import '../widgets/menu_list.dart';
 
@@ -42,7 +43,7 @@ class _AccountPageState extends State<AccountPage> {
       case 3:
         break;
       case 4:
-        context.go('/account');
+        context.push('/account');
         break;
     }
   }
@@ -63,7 +64,10 @@ class _AccountPageState extends State<AccountPage> {
             }
 
             if (state is AccountLoaded) {
-              return _AccountContent(name: state.user.name);
+              return _AccountContent(
+                name: state.user.name,
+                summary: state.summary,
+              );
             }
 
             if (state is AccountError) {
@@ -86,8 +90,9 @@ class _AccountPageState extends State<AccountPage> {
 
 class _AccountContent extends StatelessWidget {
   final String name;
+  final AccountSummaryEntity summary;
 
-  const _AccountContent({required this.name});
+  const _AccountContent({required this.name, required this.summary});
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +103,12 @@ class _AccountContent extends StatelessWidget {
           const SizedBox(height: 20),
           ProfileSection(name: name),
           const SizedBox(height: 20),
-          const SpendingOverview(),
+          AccountSummary(
+            balance: summary.balance,
+            income: summary.income,
+            expenses: summary.expenses,
+            transactions: summary.transactions,
+          ),
           const SizedBox(height: 20),
           const InviteFriends(),
           const SizedBox(height: 20),

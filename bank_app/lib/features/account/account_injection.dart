@@ -1,3 +1,4 @@
+import 'package:bank_app/features/account/domain/usecases/get_account_summary.dart';
 import 'package:bank_app/features/account/domain/usecases/get_user.dart';
 import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,11 +12,16 @@ import 'presentation/bloc/account_bloc.dart';
 final slAccount = GetIt.instance;
 
 void initAccount() {
-  // BLoC
-  slAccount.registerFactory(() => AccountBloc(slAccount()));
+  if (slAccount.isRegistered<GetAccountSummary>()) return;
 
-  // UseCase
+  // BLoC
+  slAccount.registerFactory(
+    () => AccountBloc(getUserData: slAccount(), getAccountSummary: slAccount()),
+  );
+
+  // UseCases
   slAccount.registerLazySingleton(() => GetUserData(slAccount()));
+  slAccount.registerLazySingleton(() => GetAccountSummary(slAccount()));
 
   // Repository
   slAccount.registerLazySingleton<UserRepository>(

@@ -18,7 +18,7 @@ class MenuList extends StatelessWidget {
           _item(
             context,
             icon: Icons.person_outline,
-            title: 'My Account',
+            title: 'My Profile',
             onTap: () {},
           ),
           _divider(),
@@ -26,14 +26,14 @@ class MenuList extends StatelessWidget {
             context,
             icon: Icons.receipt_long_outlined,
             title: 'Transaction History',
-            onTap: () => context.go('/transactions'),
+            onTap: () => context.push('/transactions'),
           ),
           _divider(),
           _item(
             context,
             icon: Icons.security_outlined,
             title: 'Security Settings',
-            onTap: () => context.go('/security'),
+            onTap: () => context.push('/security'),
           ),
           _divider(),
           _item(
@@ -62,7 +62,7 @@ class MenuList extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: primary.withOpacity(0.1),
+                color: primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: primary),
