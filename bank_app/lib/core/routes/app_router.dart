@@ -1,4 +1,5 @@
 import 'package:bank_app/core/routes/go_router_refresh.dart';
+import 'package:bank_app/features/account/presentation/pages/account_page.dart';
 import 'package:bank_app/features/transaction/data/datasources/firebase_transaction_database.dart';
 import 'package:bank_app/features/transaction/data/repositories/transaction_repository_impl.dart';
 import 'package:bank_app/features/transaction/domain/usecases/get_transaction.dart';
@@ -74,6 +75,11 @@ class AppRouter {
 
             return TransactionReceiptPage(receipt: receipt);
           },
+        ),
+        GoRoute(
+          path: '/account',
+          name: 'account',
+          builder: (context, state) => const AccountPage(),
         ),
       ],
     );

@@ -1,3 +1,4 @@
+import 'package:bank_app/features/account/account_injection.dart';
 import 'package:bank_app/features/auth/data/datasources/firebase_auth_datasource.dart';
 import 'package:bank_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:bank_app/features/auth/domain/usecases/get_current_user.dart';
@@ -22,6 +23,8 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   await di.init();
+
+  initAccount();
 
   final dataSource = FirebaseAuthDataSource(
     FirebaseAuth.instance,
