@@ -1,4 +1,7 @@
 import 'package:bank_app/core/themes/app_colors.dart';
+import 'package:bank_app/features/transaction/data/models/transaction_mapper.dart';
+import 'package:bank_app/features/transaction/data/models/transaction_model.dart';
+import 'package:bank_app/features/transaction_receipt/presentation/pages/transaction_receipt_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/transaction.dart';
@@ -37,6 +40,16 @@ class TransactionCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
+        onTap: () {
+          final receipt = (transaction as TransactionModel).toReceiptEntity();
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => TransactionReceiptPage(receipt: receipt),
+            ),
+          );
+        },
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(

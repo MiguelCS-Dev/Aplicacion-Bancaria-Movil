@@ -1,9 +1,8 @@
 import 'dart:typed_data';
-
-import '../repositories/receipt_repository.dart';
+import 'package:bank_app/features/transaction_receipt/data/repositories/receipt_repository_impl.dart';
 
 class ShareReceipt {
-  final ReceiptRepository repository;
+  final ReceiptRepositoryImpl repository;
 
   ShareReceipt(this.repository);
 
