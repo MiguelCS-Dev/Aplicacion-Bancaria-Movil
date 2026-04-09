@@ -1,3 +1,4 @@
+import 'package:bank_app/core/themes/app_colors.dart';
 import 'package:bank_app/features/transaction/presentation/utils/group_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +21,6 @@ class _TransactionPageState extends State<TransactionPage> {
   @override
   void initState() {
     super.initState();
-
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
@@ -38,6 +38,12 @@ class _TransactionPageState extends State<TransactionPage> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
@@ -46,7 +52,20 @@ class _TransactionPageState extends State<TransactionPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Transaction History')),
+      appBar: AppBar(
+        title: const Text(
+          'Transaction History',
+          style: TextStyle(color: white),
+        ),
+        backgroundColor: primary,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      backgroundColor: primary,
       body: Column(
         children: [
           TransactionFilter(
@@ -54,7 +73,6 @@ class _TransactionPageState extends State<TransactionPage> {
               context.read<TransactionCubit>().changeFilter(user.uid, filter);
             },
           ),
-
           Expanded(
             child: BlocBuilder<TransactionCubit, TransactionState>(
               builder: (context, state) {
@@ -70,8 +88,10 @@ class _TransactionPageState extends State<TransactionPage> {
                   if (state.transactions.isEmpty) {
                     return const Center(child: Text('No transactions yet'));
                   }
+
                   final grouped = groupTransactionsByDate(state.transactions);
                   final sections = grouped.entries.toList();
+
                   return ListView.builder(
                     controller: _scrollController,
                     itemCount: sections.length + (state.isLoadingMore ? 1 : 0),
@@ -98,11 +118,10 @@ class _TransactionPageState extends State<TransactionPage> {
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.grey,
+                                color: white,
                               ),
                             ),
                           ),
-
                           ...section.value.map(
                             (tx) => TransactionCard(transaction: tx),
                           ),
