@@ -9,9 +9,6 @@ class ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        print('Tapped ${item.label}');
-      },
       borderRadius: BorderRadius.circular(15),
       child: Container(
         decoration: BoxDecoration(
@@ -24,10 +21,7 @@ class ActionButton extends StatelessWidget {
           children: [
             Icon(item.icon, color: item.iconColor, size: 30),
             const SizedBox(height: 8),
-            Text(
-              item.label,
-              textAlign: TextAlign.center,
-            ),
+            Text(item.label, textAlign: TextAlign.center),
           ],
         ),
       ),
