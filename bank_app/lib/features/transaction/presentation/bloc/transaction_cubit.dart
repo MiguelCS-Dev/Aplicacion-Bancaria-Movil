@@ -39,4 +39,8 @@ class TransactionCubit extends Cubit<TransactionState> {
     _subscription?.cancel();
     return super.close();
   }
+
+  Future<void> refresh(String userId) async {
+    loadTransactions(userId);
+  }
 }

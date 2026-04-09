@@ -1,10 +1,6 @@
 import 'package:bank_app/core/routes/go_router_refresh.dart';
-import 'package:bank_app/features/transaction/data/datasources/firebase_transaction_database.dart';
-import 'package:bank_app/features/transaction/data/repositories/transaction_repository_impl.dart';
-import 'package:bank_app/features/transaction/domain/usecases/get_transaction.dart';
 import 'package:bank_app/features/transaction/presentation/bloc/transaction_cubit.dart';
 import 'package:bank_app/features/transaction/presentation/pages/transaction_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -50,16 +46,8 @@ class AppRouter {
         GoRoute(
           path: '/transactions',
           builder: (context, state) {
-            return BlocProvider(
-              create: (context) {
-                final firestore = FirebaseFirestore.instance;
-
-                final dataSource = FirebaseTransactionDataSource(firestore);
-                final repository = TransactionRepositoryImpl(dataSource);
-                final usecase = GetTransactions(repository);
-
-                return TransactionCubit(usecase);
-              },
+            return BlocProvider.value(
+              value: context.read<TransactionCubit>(), // 👈 reutiliza
               child: const TransactionPage(),
             );
           },
