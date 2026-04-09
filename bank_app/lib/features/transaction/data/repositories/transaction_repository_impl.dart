@@ -10,23 +10,17 @@ class TransactionRepositoryImpl implements TransactionRepository {
   TransactionRepositoryImpl(this.dataSource);
 
   @override
-  Stream<List<Transactio>> getTransactions({
+  Future<List<Transactio>> getTransactions({
     required String userId,
     required String filter,
-  }) {
-    return dataSource.getTransactions(userId: userId, filter: filter).map((
-      snapshot,
-    ) {
-      final transactions = snapshot.docs
-          .map((doc) => TransactionModel.fromFirestore(doc))
-          .toList();
-      transactions.sort((a, b) {
-        if (a.date == null) return 1;
-        if (b.date == null) return -1;
-        return b.date!.compareTo(a.date!);
-      });
+    bool loadMore = false,
+  }) async {
+    final docs = await dataSource.getTransactions(
+      userId: userId,
+      filter: filter,
+      loadMore: loadMore,
+    );
 
-      return transactions;
-    });
+    return docs.map((doc) => TransactionModel.fromFirestore(doc)).toList();
   }
 }

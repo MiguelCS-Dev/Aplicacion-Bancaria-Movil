@@ -1,3 +1,4 @@
+import 'package:bank_app/features/transaction/presentation/utils/group_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,14 +15,26 @@ class TransactionPage extends StatefulWidget {
 }
 
 class _TransactionPageState extends State<TransactionPage> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
 
     final user = FirebaseAuth.instance.currentUser;
+
     if (user != null) {
       context.read<TransactionCubit>().loadTransactions(user.uid);
     }
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        if (user != null) {
+          context.read<TransactionCubit>().loadMore(user.uid);
+        }
+      }
+    });
   }
 
   @override
@@ -36,14 +49,12 @@ class _TransactionPageState extends State<TransactionPage> {
       appBar: AppBar(title: const Text('Transaction History')),
       body: Column(
         children: [
-          /// 🔹 FILTROS
           TransactionFilter(
             onFilterChanged: (filter) {
               context.read<TransactionCubit>().changeFilter(user.uid, filter);
             },
           ),
 
-          /// 🔹 LISTA
           Expanded(
             child: BlocBuilder<TransactionCubit, TransactionState>(
               builder: (context, state) {
@@ -59,17 +70,47 @@ class _TransactionPageState extends State<TransactionPage> {
                   if (state.transactions.isEmpty) {
                     return const Center(child: Text('No transactions yet'));
                   }
-
+                  final grouped = groupTransactionsByDate(state.transactions);
+                  final sections = grouped.entries.toList();
                   return ListView.builder(
-                    itemCount: state.transactions.length,
+                    controller: _scrollController,
+                    itemCount: sections.length + (state.isLoadingMore ? 1 : 0),
                     itemBuilder: (context, index) {
-                      final tx = state.transactions[index];
+                      if (index >= sections.length) {
+                        return const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
 
-                      return TransactionCard(transaction: tx);
+                      final section = sections[index];
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            child: Text(
+                              section.key,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+
+                          ...section.value.map(
+                            (tx) => TransactionCard(transaction: tx),
+                          ),
+                        ],
+                      );
                     },
                   );
                 }
-
                 return const SizedBox();
               },
             ),

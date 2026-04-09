@@ -6,10 +6,15 @@ class GetTransactions {
 
   GetTransactions(this.repository);
 
-  Stream<List<Transactio>> call({
+  Future<List<Transactio>> call({
     required String userId,
     required String filter,
+    bool loadMore = false,
   }) {
-    return repository.getTransactions(userId: userId, filter: filter);
+    return repository.getTransactions(
+      userId: userId,
+      filter: filter,
+      loadMore: loadMore,
+    );
   }
 }

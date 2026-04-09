@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bank_app/core/widgets/skeleton_container.dart';
+import 'package:bank_app/core/widgets/shimmer_box.dart';
 
 class TransactionRow extends StatelessWidget {
   const TransactionRow({super.key});
@@ -13,7 +13,7 @@ class TransactionRow extends StatelessWidget {
           _IconPlaceholder(),
           SizedBox(width: 15),
           _DetailsPlaceholder(),
-          SkeletonContainer(width: 70, height: 16, radius: 4),
+          ShimmerBox(width: 70, height: 16, radius: 4),
         ],
       ),
     );
@@ -31,7 +31,7 @@ class _IconPlaceholder extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: const SkeletonContainer(width: 24, height: 24, radius: 4),
+      child: const ShimmerBox(width: 24, height: 24, radius: 4),
     );
   }
 }
@@ -45,9 +45,9 @@ class _DetailsPlaceholder extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SkeletonContainer(width: 120, height: 16, radius: 4),
+          ShimmerBox(width: 120, height: 16, radius: 4),
           SizedBox(height: 5),
-          SkeletonContainer(width: 80, height: 14, radius: 4),
+          ShimmerBox(width: 80, height: 14, radius: 4),
         ],
       ),
     );

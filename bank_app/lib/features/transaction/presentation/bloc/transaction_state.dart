@@ -9,8 +9,13 @@ class TransactionLoading extends TransactionState {}
 class TransactionLoaded extends TransactionState {
   final List<Transactio> transactions;
   final String filter;
+  final bool isLoadingMore;
 
-  TransactionLoaded({required this.transactions, required this.filter});
+  TransactionLoaded({
+    required this.transactions,
+    required this.filter,
+    this.isLoadingMore = false,
+  });
 }
 
 class TransactionError extends TransactionState {
