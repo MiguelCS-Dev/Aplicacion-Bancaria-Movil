@@ -16,7 +16,7 @@ class TransactionHistorySection extends StatelessWidget {
     final user = FirebaseAuth.instance.currentUser;
 
     return Container(
-      color: Colors.white,
+      color: white,
       margin: const EdgeInsets.only(top: 4),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),

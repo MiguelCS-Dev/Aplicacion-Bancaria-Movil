@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:bank_app/core/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -110,7 +111,7 @@ class _ScanQrTabState extends State<ScanQrTab> {
           Container(color: Colors.black), // pantalla apagada
         // Overlay oscuro
         Container(
-          color: Colors.black.withOpacity(0.5),
+          color: Colors.black.withValues(alpha: 0.5),
           child: Column(
             children: [
               const Spacer(),
@@ -121,7 +122,7 @@ class _ScanQrTabState extends State<ScanQrTab> {
                   width: 250,
                   height: 250,
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white, width: 3),
+                    border: Border.all(color: white, width: 3),
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
@@ -129,15 +130,11 @@ class _ScanQrTabState extends State<ScanQrTab> {
 
               const SizedBox(height: 20),
 
-              const Text(
-                'Scan QR to pay',
-                style: TextStyle(color: Colors.white),
-              ),
+              const Text('Scan QR to pay', style: TextStyle(color: white)),
 
               const Spacer(),
 
-              if (_isProcessing)
-                const CircularProgressIndicator(color: Colors.white),
+              if (_isProcessing) const CircularProgressIndicator(color: white),
 
               const SizedBox(height: 50),
             ],

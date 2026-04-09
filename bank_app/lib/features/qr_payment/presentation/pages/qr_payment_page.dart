@@ -35,8 +35,8 @@ class _QrPaymentPageState extends State<QrPaymentPage>
         backgroundColor: primary,
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: Colors.white70,
-          labelColor: Colors.white70,
+          indicatorColor: secondaryWhite,
+          labelColor: secondaryWhite,
           unselectedLabelColor: secondary,
           tabs: const [
             Tab(icon: Icon(Icons.qr_code), text: 'My QR'),

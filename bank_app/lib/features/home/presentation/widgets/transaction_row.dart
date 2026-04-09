@@ -1,3 +1,4 @@
+import 'package:bank_app/core/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:bank_app/core/widgets/shimmer_box.dart';
 
@@ -28,7 +29,7 @@ class _IconPlaceholder extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: white,
         borderRadius: BorderRadius.circular(12),
       ),
       child: const ShimmerBox(width: 24, height: 24, radius: 4),

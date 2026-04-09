@@ -4,10 +4,7 @@ import 'package:bank_app/core/themes/app_colors.dart';
 class FabButton extends StatelessWidget {
   final VoidCallback onTap;
 
-  const FabButton({
-    super.key,
-    required this.onTap,
-  });
+  const FabButton({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -26,18 +23,14 @@ class FabButton extends StatelessWidget {
             color: secondary,
             blurRadius: 10,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: FloatingActionButton(
         onPressed: onTap,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        child: const Icon(
-          Icons.qr_code_scanner,
-          color: Colors.white,
-          size: 28,
-        ),
+        child: const Icon(Icons.qr_code_scanner, color: white, size: 28),
       ),
     );
   }

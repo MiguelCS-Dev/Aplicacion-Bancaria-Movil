@@ -45,7 +45,7 @@ class HeaderSection extends StatelessWidget {
         const Text(
           'Bank',
           style: TextStyle(
-            color: Colors.white,
+            color: white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -73,10 +73,10 @@ class HeaderSection extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.white.withOpacity(0.3),
+          color: white.withValues(alpha: 0.3),
         ),
         padding: const EdgeInsets.all(8),
-        child: const Icon(Icons.logout, color: Colors.white, size: 20),
+        child: const Icon(Icons.logout, color: white, size: 20),
       ),
     );
   }
@@ -85,10 +85,10 @@ class HeaderSection extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white.withOpacity(0.3),
+        color: white.withValues(alpha: 0.3),
       ),
       padding: const EdgeInsets.all(8),
-      child: Icon(icon, color: Colors.white, size: 20),
+      child: Icon(icon, color: white, size: 20),
     );
   }
 
@@ -102,19 +102,19 @@ class HeaderSection extends StatelessWidget {
   Widget _buildGreeting() {
     return Row(
       children: [
-        const Icon(Icons.lock_outline, color: Colors.white, size: 24),
+        const Icon(Icons.lock_outline, color: white, size: 24),
         const SizedBox(width: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               getGreeting(),
-              style: TextStyle(color: Colors.white70, fontSize: 14),
+              style: TextStyle(color: secondaryWhite, fontSize: 14),
             ),
             Text(
               userName,
               style: TextStyle(
-                color: Colors.white70,
+                color: secondaryWhite,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),

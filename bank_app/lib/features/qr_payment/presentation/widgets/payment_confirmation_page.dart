@@ -141,10 +141,7 @@ class _PaymentConfirmationViewState extends State<_PaymentConfirmationView> {
       child: Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
-          title: const Text(
-            'Confirm Payment',
-            style: TextStyle(color: Colors.white),
-          ),
+          title: const Text('Confirm Payment', style: TextStyle(color: white)),
           backgroundColor: primary,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: secondary),
@@ -168,7 +165,7 @@ class _PaymentConfirmationViewState extends State<_PaymentConfirmationView> {
                   children: [
                     const Text(
                       'Pay to',
-                      style: TextStyle(color: Colors.white70),
+                      style: TextStyle(color: secondaryWhite),
                     ),
                     const SizedBox(height: 10),
                     const Icon(
@@ -190,7 +187,7 @@ class _PaymentConfirmationViewState extends State<_PaymentConfirmationView> {
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: white,
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Column(
