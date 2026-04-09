@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:bank_app/core/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +38,20 @@ class TransactionReceiptPage extends StatelessWidget {
         ShareReceipt(ReceiptRepositoryImpl(ReceiptShareService())),
       ),
       child: Scaffold(
-        appBar: AppBar(title: const Text("Receipt")),
+        backgroundColor: Colors.grey[100],
+        appBar: AppBar(
+          title: const Text(
+            "Transaction Receipt",
+            style: TextStyle(color: white),
+          ),
+          backgroundColor: primary,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: white),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
         body: BlocConsumer<ReceiptBloc, ReceiptState>(
           listener: (context, state) {
             if (state is ReceiptError) {
@@ -49,30 +63,66 @@ class TransactionReceiptPage extends StatelessWidget {
           builder: (context, state) {
             final isLoading = state is ReceiptLoading;
 
-            return Column(
-              children: [
-                RepaintBoundary(
-                  key: repaintKey,
-                  child: ReceiptCard(receipt: receipt),
-                ),
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(height: 16),
+                  RepaintBoundary(
+                    key: repaintKey,
+                    child: ReceiptCard(receipt: receipt),
+                  ),
 
-                const SizedBox(height: 20),
+                  const SizedBox(height: 24),
 
-                ElevatedButton(
-                  onPressed: isLoading
-                      ? null
-                      : () async {
-                          final bytes = await _captureImage();
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton.icon(
+                        onPressed: isLoading
+                            ? null
+                            : () async {
+                                final bytes = await _captureImage();
 
-                          context.read<ReceiptBloc>().add(
-                            ShareReceiptEvent(bytes: bytes, receipt: receipt),
-                          );
-                        },
-                  child: isLoading
-                      ? const CircularProgressIndicator()
-                      : const Text("Share Receipt"),
-                ),
-              ],
+                                context.read<ReceiptBloc>().add(
+                                  ShareReceiptEvent(
+                                    bytes: bytes,
+                                    receipt: receipt,
+                                  ),
+                                );
+                              },
+                        icon: isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.share, color: Colors.white),
+                        label: Text(
+                          isLoading ? 'Preparing...' : 'Share Receipt',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                ],
+              ),
             );
           },
         ),

@@ -1,8 +1,8 @@
 import 'package:bank_app/core/themes/app_colors.dart';
 import 'package:bank_app/features/transaction/data/models/transaction_mapper.dart';
 import 'package:bank_app/features/transaction/data/models/transaction_model.dart';
-import 'package:bank_app/features/transaction_receipt/presentation/pages/transaction_receipt_page.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/transaction.dart';
 
@@ -42,13 +42,7 @@ class TransactionCard extends StatelessWidget {
       child: ListTile(
         onTap: () {
           final receipt = (transaction as TransactionModel).toReceiptEntity();
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => TransactionReceiptPage(receipt: receipt),
-            ),
-          );
+          context.pushNamed('receipt', extra: receipt);
         },
         leading: Container(
           padding: const EdgeInsets.all(8),
