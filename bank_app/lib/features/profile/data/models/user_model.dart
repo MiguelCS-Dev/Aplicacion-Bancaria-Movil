@@ -6,11 +6,13 @@ class AppUserModel extends AppUser {
     required String email,
     required String phone,
     required String accountNumber,
+    required double balance,
   }) : super(
          name: name,
          email: email,
          phone: phone,
          accountNumber: accountNumber,
+         balance: balance,
        );
 
   factory AppUserModel.fromJson(Map<String, dynamic> json) {
@@ -19,6 +21,7 @@ class AppUserModel extends AppUser {
       email: json['email'] ?? '',
       phone: json['phone'] ?? '',
       accountNumber: json['account_number'] ?? '',
+      balance: (json['account_balance'] ?? 0.0).toDouble(),
     );
   }
 }

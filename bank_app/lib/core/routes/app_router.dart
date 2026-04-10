@@ -1,5 +1,6 @@
 import 'package:bank_app/core/routes/go_router_refresh.dart';
 import 'package:bank_app/features/account/presentation/pages/account_page.dart';
+import 'package:bank_app/features/profile/data/datasources/firebase_profile_datasource.dart';
 import 'package:bank_app/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:bank_app/features/profile/domain/usecases/get_user_profile.dart';
 import 'package:bank_app/features/profile/domain/usecases/update_user_profile.dart';
@@ -90,20 +91,16 @@ class AppRouter {
         GoRoute(
           path: '/profile',
           builder: (context, state) {
+            final firestore = FirebaseFirestore.instance;
+            final auth = FirebaseAuth.instance;
+
+            final dataSource = FirebaseProfileDataSource(firestore, auth);
+            final repository = ProfileRepositoryImpl(dataSource);
+
             return BlocProvider(
               create: (_) => ProfileCubit(
-                GetUserProfile(
-                  ProfileRepositoryImpl(
-                    FirebaseFirestore.instance,
-                    FirebaseAuth.instance,
-                  ),
-                ),
-                UpdateUserProfile(
-                  ProfileRepositoryImpl(
-                    FirebaseFirestore.instance,
-                    FirebaseAuth.instance,
-                  ),
-                ),
+                GetUserProfile(repository),
+                UpdateUserProfile(repository),
               )..loadProfile(),
               child: const ProfilePage(),
             );
