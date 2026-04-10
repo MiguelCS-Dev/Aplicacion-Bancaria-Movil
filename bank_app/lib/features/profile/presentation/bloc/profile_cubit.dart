@@ -21,15 +21,12 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<void> updateProfile(String email, String phone) async {
-    emit(ProfileUpdating());
+  Future<void> updateProfile({
+    required String email,
+    required String phone,
+  }) async {
+    await updateUserProfile(email: email, phone: phone);
 
-    try {
-      await updateUserProfile(email: email, phone: phone);
-      await loadProfile();
-      emit(ProfileUpdated());
-    } catch (_) {
-      emit(ProfileError());
-    }
+    await loadProfile(); // refresca datos
   }
 }

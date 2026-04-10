@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ProfileHeader extends StatelessWidget {
-  final String fullName;
-
-  const ProfileHeader({super.key, required this.fullName});
+class EditHeader extends StatelessWidget {
+  const EditHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +13,12 @@ class ProfileHeader extends StatelessWidget {
             color: Colors.white.withValues(alpha: 0.2),
             shape: BoxShape.circle,
           ),
-          child: const Icon(Icons.person, size: 40, color: Colors.white),
+          child: const Icon(Icons.edit, color: Colors.white, size: 40),
         ),
         const SizedBox(height: 12),
-        Text(
-          fullName,
-          style: const TextStyle(
+        const Text(
+          "Edit profile",
+          style: TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
