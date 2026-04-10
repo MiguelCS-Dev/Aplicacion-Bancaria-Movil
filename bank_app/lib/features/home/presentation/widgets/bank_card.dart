@@ -83,11 +83,11 @@ class _BalanceDisplay extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(balance, style: TextStyle(color: secondaryWhite, fontSize: 12)),
-        SizedBox(height: 4),
+        Text("Balance", style: TextStyle(color: secondaryWhite, fontSize: 12)),
+        const SizedBox(height: 4),
         Text(
-          '\$9999',
-          style: TextStyle(
+          balance,
+          style: const TextStyle(
             color: white,
             fontSize: 28,
             fontWeight: FontWeight.bold,
@@ -103,11 +103,17 @@ class _CardNumber extends StatelessWidget {
 
   const _CardNumber({required this.cardNumber});
 
+  String mask(String number) {
+    if (number.length <= 4) return number;
+    final last4 = number.substring(number.length - 4);
+    return "**** **** **** $last4";
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      '**** **** **** 1234',
-      style: TextStyle(
+    return Text(
+      mask(cardNumber),
+      style: const TextStyle(
         color: white,
         fontSize: 18,
         fontWeight: FontWeight.bold,
@@ -127,30 +133,30 @@ class _CardDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: const [
+      children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Card Holder',
               style: TextStyle(color: secondaryWhite, fontSize: 12),
             ),
             Text(
-              'User',
-              style: TextStyle(color: white, fontWeight: FontWeight.w500),
+              cardHolder,
+              style: const TextStyle(color: white, fontWeight: FontWeight.w500),
             ),
           ],
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(
+            const Text(
               'Expires',
               style: TextStyle(color: secondaryWhite, fontSize: 12),
             ),
             Text(
-              '12/26',
-              style: TextStyle(color: white, fontWeight: FontWeight.w500),
+              expiryDate,
+              style: const TextStyle(color: white, fontWeight: FontWeight.w500),
             ),
           ],
         ),

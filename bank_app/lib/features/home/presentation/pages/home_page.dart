@@ -1,3 +1,7 @@
+import 'package:bank_app/features/home/presentation/bloc/home_cubit.dart';
+import 'package:bank_app/features/profile/data/datasources/firebase_profile_datasource.dart';
+import 'package:bank_app/features/profile/data/repositories/profile_repository_impl.dart';
+import 'package:bank_app/features/profile/domain/usecases/get_user_profile.dart';
 import 'package:bank_app/features/transaction/data/datasources/firebase_transaction_database.dart';
 import 'package:bank_app/features/transaction/data/repositories/transaction_repository_impl.dart';
 import 'package:bank_app/features/transaction/domain/usecases/get_transaction.dart';
@@ -31,21 +35,41 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        final firestore = FirebaseFirestore.instance;
-        final dataSource = FirebaseTransactionDataSource(firestore);
-        final repository = TransactionRepositoryImpl(dataSource);
-        final usecase = GetTransactions(repository);
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) {
+            final firestore = FirebaseFirestore.instance;
+            final dataSource = FirebaseTransactionDataSource(firestore);
+            final repository = TransactionRepositoryImpl(dataSource);
+            final usecase = GetTransactions(repository);
 
-        final cubit = TransactionCubit(usecase);
+            final cubit = TransactionCubit(usecase);
 
-        if (user != null) {
-          cubit.loadTransactions(user!.uid);
-        }
+            if (user != null) {
+              cubit.loadTransactions(user!.uid);
+            }
 
-        return cubit;
-      },
+            return cubit;
+          },
+        ),
+
+        BlocProvider(
+          create: (context) {
+            final firestore = FirebaseFirestore.instance;
+            final auth = FirebaseAuth.instance;
+
+            final dataSource = FirebaseProfileDataSource(firestore, auth);
+            final repository = ProfileRepositoryImpl(dataSource);
+            final usecase = GetUserProfile(repository);
+
+            final cubit = HomeCubit(usecase);
+            cubit.loadUser();
+
+            return cubit;
+          },
+        ),
+      ],
       child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 231, 231, 231),
         appBar: AppBar(
