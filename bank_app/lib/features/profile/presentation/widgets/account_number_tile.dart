@@ -1,4 +1,5 @@
 import 'package:bank_app/core/themes/app_colors.dart';
+import 'package:bank_app/core/widgets/account_number_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -25,7 +26,7 @@ class AccountNumberTile extends StatelessWidget {
           Row(
             children: [
               Text(
-                mask(accountNumber),
+                mask(AccountNumberFormatter.format(accountNumber)),
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: primary,
