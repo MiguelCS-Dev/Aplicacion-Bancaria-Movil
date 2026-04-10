@@ -19,7 +19,7 @@ class MenuList extends StatelessWidget {
             context,
             icon: Icons.person_outline,
             title: 'My Profile',
-            onTap: () {},
+            onTap: () => context.push('/profile'),
           ),
           _divider(),
           _item(
