@@ -1,5 +1,11 @@
 import 'package:bank_app/core/routes/go_router_refresh.dart';
 import 'package:bank_app/features/account/presentation/pages/account_page.dart';
+import 'package:bank_app/features/profile/data/repositories/profile_repository_impl.dart';
+import 'package:bank_app/features/profile/domain/usecases/get_user_profile.dart';
+import 'package:bank_app/features/profile/domain/usecases/update_user_profile.dart';
+import 'package:bank_app/features/profile/presentation/bloc/profile_cubit.dart';
+import 'package:bank_app/features/profile/presentation/pages/edit_profile_page.dart';
+import 'package:bank_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:bank_app/features/transaction/data/datasources/firebase_transaction_database.dart';
 import 'package:bank_app/features/transaction/data/repositories/transaction_repository_impl.dart';
 import 'package:bank_app/features/transaction/domain/usecases/get_transaction.dart';
@@ -80,6 +86,39 @@ class AppRouter {
           path: '/account',
           name: 'account',
           builder: (context, state) => const AccountPage(),
+        ),
+        GoRoute(
+          path: '/profile',
+          builder: (context, state) {
+            return BlocProvider(
+              create: (_) => ProfileCubit(
+                GetUserProfile(
+                  ProfileRepositoryImpl(
+                    FirebaseFirestore.instance,
+                    FirebaseAuth.instance,
+                  ),
+                ),
+                UpdateUserProfile(
+                  ProfileRepositoryImpl(
+                    FirebaseFirestore.instance,
+                    FirebaseAuth.instance,
+                  ),
+                ),
+              )..loadProfile(),
+              child: const ProfilePage(),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/edit-profile',
+          builder: (context, state) {
+            final cubit = state.extra as ProfileCubit;
+
+            return BlocProvider.value(
+              value: cubit,
+              child: const EditProfilePage(),
+            );
+          },
         ),
       ],
     );
