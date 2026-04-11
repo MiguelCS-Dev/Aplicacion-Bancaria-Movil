@@ -36,35 +36,6 @@ class EditProfileFormState extends State<EditProfileForm> {
     super.dispose();
   }
 
-  void _submit() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() => isLoading = true);
-
-    try {
-      await context.read<ProfileCubit>().updateProfile(
-        email: emailController.text.trim(),
-        phone: phoneController.text.trim(),
-      );
-
-      if (mounted) {
-        Navigator.pop(context);
-
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Updated profile")));
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Error updating")));
-    } finally {
-      if (mounted) {
-        setState(() => isLoading = false);
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -111,14 +82,21 @@ class EditProfileFormState extends State<EditProfileForm> {
               label: "Teléfono",
               icon: Icons.phone_outlined,
               keyboardType: TextInputType.phone,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(15),
+              ],
               validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return "Ingrese su número";
+                if (value == null || value.isEmpty) {
+                  return 'Ingrese su número de teléfono';
                 }
 
-                if (value.length < 10) {
-                  return "Debe tener al menos 10 dígitos";
+                if (value.length < 7) {
+                  return 'Número demasiado corto';
+                }
+
+                if (value.length > 15) {
+                  return 'Máximo 15 dígitos';
                 }
 
                 return null;
@@ -177,7 +155,14 @@ class EditProfileFormState extends State<EditProfileForm> {
         ],
       ),
       child: ElevatedButton(
-        onPressed: isLoading ? null : _submit,
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            context.read<ProfileCubit>().updateProfile(
+              email: emailController.text.trim(),
+              phone: phoneController.text.trim(),
+            );
+          }
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
