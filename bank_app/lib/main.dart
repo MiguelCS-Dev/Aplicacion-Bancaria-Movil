@@ -8,6 +8,7 @@ import 'package:bank_app/features/auth/domain/usecases/register_user.dart';
 import 'package:bank_app/features/auth/domain/usecases/reset_password.dart';
 import 'package:bank_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:bank_app/features/auth/presentation/bloc/auth_event.dart';
+import 'package:bank_app/features/transfer/transfer_injection.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  TransferInjection.init();
   await di.init();
 
   initAccount();

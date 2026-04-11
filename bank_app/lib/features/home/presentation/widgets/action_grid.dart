@@ -26,9 +26,9 @@ class ActionGridSection extends StatelessWidget {
               mainAxisSpacing: 10,
               crossAxisSpacing: 10,
               childAspectRatio: 0.8,
-              children: actionItems
-                  .map((item) => ActionButton(item: item))
-                  .toList(),
+              children: getActionItems(
+                context,
+              ).map((item) => ActionButton(item: item)).toList(),
             ),
           ],
         ),
