@@ -6,7 +6,7 @@ class MakeTransfer {
 
   MakeTransfer(this.repository);
 
-  Future<void> call(Transfer transfer) async {
+  Future<String> call(Transfer transfer) async {
     if (transfer.amount <= 0) {
       throw Exception('Amount must be greater than 0');
     }

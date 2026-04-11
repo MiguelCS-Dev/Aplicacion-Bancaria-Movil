@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class TransferRemoteDataSource {
   Future<UserAccountModel> getUserByAccount(String accountNumber);
-  Future<void> makeTransfer(TransferModel transfer);
+  Future<String> makeTransfer(TransferModel transfer); // 👈 devuelve ID
 }
 
 class TransferRemoteDataSourceImpl implements TransferRemoteDataSource {
@@ -28,25 +28,22 @@ class TransferRemoteDataSourceImpl implements TransferRemoteDataSource {
       throw Exception('User not found');
     }
 
-    final data = result.docs.first.data();
-
-    return UserAccountModel.fromJson(data);
+    return UserAccountModel.fromJson(result.docs.first.data());
   }
 
   @override
-  Future<void> makeTransfer(TransferModel transfer) async {
-    final firestore = FirebaseFirestore.instance;
+  Future<String> makeTransfer(TransferModel transfer) async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
 
+    String transactionId = '';
+
     await firestore.runTransaction((transaction) async {
-      final fromDocRef = firestore.collection('users').doc(uid);
-      final fromSnapshot = await transaction.get(fromDocRef);
+      final fromRef = firestore.collection('users').doc(uid);
+      final fromSnap = await transaction.get(fromRef);
 
-      if (!fromSnapshot.exists) {
-        throw Exception('Sender not found');
-      }
+      if (!fromSnap.exists) throw Exception('Sender not found');
 
-      final fromData = fromSnapshot.data()!;
+      final fromData = fromSnap.data()!;
 
       final toQuery = await firestore
           .collection('users')
@@ -54,19 +51,10 @@ class TransferRemoteDataSourceImpl implements TransferRemoteDataSource {
           .limit(1)
           .get();
 
-      if (toQuery.docs.isEmpty) {
-        throw Exception('Receiver not found');
-      }
+      if (toQuery.docs.isEmpty) throw Exception('Receiver not found');
 
       final toDoc = toQuery.docs.first;
       final toData = toDoc.data();
-
-      final fromAccountNumber = fromData['account_number'].toString();
-      final toAccountNumber = toData['account_number'].toString();
-
-      if (fromAccountNumber == toAccountNumber) {
-        throw Exception('Cannot transfer to yourself');
-      }
 
       final fromBalance = (fromData['account_balance'] as num).toDouble();
       final toBalance = (toData['account_balance'] as num).toDouble();
@@ -75,20 +63,48 @@ class TransferRemoteDataSourceImpl implements TransferRemoteDataSource {
         throw Exception('Insufficient balance');
       }
 
+      if (fromData['account_number'].toString() ==
+          toData['account_number'].toString()) {
+        throw Exception('Cannot transfer to yourself');
+      }
+
       final newFromBalance = fromBalance - transfer.amount;
       final newToBalance = toBalance + transfer.amount;
 
-      transaction.update(fromDocRef, {'account_balance': newFromBalance});
+      transaction.update(fromRef, {'account_balance': newFromBalance});
 
       transaction.update(toDoc.reference, {'account_balance': newToBalance});
 
-      final transactionRef = firestore.collection('transactions').doc();
+      final transactionsRef = firestore.collection('transactions');
 
-      transaction.set(transactionRef, {
-        ...transfer.toJson(),
-        'from_uid': uid,
-        'createdAt': FieldValue.serverTimestamp(),
+      final debitRef = transactionsRef.doc();
+      transactionId = debitRef.id;
+
+      transaction.set(debitRef, {
+        'amount': transfer.amount,
+        'category': 'Transfer',
+        'description': 'Transfer to ${toData['name']}',
+        'note': transfer.note ?? '',
+        'recipient': toData['name'],
+        'recipientId': toDoc.id,
+        'timestamp': FieldValue.serverTimestamp(),
+        'type': 'debit',
+        'userId': uid,
+      });
+
+      transaction.set(transactionsRef.doc(), {
+        'amount': transfer.amount,
+        'category': 'Transfer',
+        'description': 'Transfer from ${fromData['name']}',
+        'note': transfer.note ?? '',
+        'recipient': fromData['name'],
+        'recipientId': uid,
+        'timestamp': FieldValue.serverTimestamp(),
+        'type': 'credit',
+        'userId': toDoc.id,
       });
     });
+
+    return transactionId;
   }
 }

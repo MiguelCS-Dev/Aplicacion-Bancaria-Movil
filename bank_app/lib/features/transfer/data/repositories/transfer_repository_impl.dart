@@ -17,13 +17,14 @@ class TransferRepositoryImpl implements TransferRepository {
   }
 
   @override
-  Future<void> makeTransfer(Transfer transfer) async {
+  Future<String> makeTransfer(Transfer transfer) async {
     final model = TransferModel(
       fromAccount: transfer.fromAccount,
       toAccount: transfer.toAccount,
       amount: transfer.amount,
+      note: transfer.note,
     );
 
-    await remoteDataSource.makeTransfer(model);
+    return await remoteDataSource.makeTransfer(model);
   }
 }

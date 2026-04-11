@@ -1,33 +1,51 @@
+import 'package:equatable/equatable.dart';
+
 import '../../domain/entities/user_account.dart';
 
-class TransferState {
+class TransferState extends Equatable {
   final bool isLoading;
-  final UserAccount? user;
-  final String? error;
-  final double amount;
   final bool transferSuccess;
+  final String error;
+
+  final UserAccount? user;
+  final double amount;
+
+  final String note;
 
   const TransferState({
     this.isLoading = false,
-    this.user,
-    this.error,
-    this.amount = 0,
     this.transferSuccess = false,
+    this.error = '',
+    this.user,
+    this.amount = 0,
+    this.note = '',
   });
 
   TransferState copyWith({
     bool? isLoading,
-    UserAccount? user,
-    String? error,
-    double? amount,
     bool? transferSuccess,
+    String? error,
+    UserAccount? user,
+    double? amount,
+    String? note,
   }) {
     return TransferState(
       isLoading: isLoading ?? this.isLoading,
-      user: user ?? this.user,
-      error: error,
-      amount: amount ?? this.amount,
       transferSuccess: transferSuccess ?? this.transferSuccess,
+      error: error ?? this.error,
+      user: user ?? this.user,
+      amount: amount ?? this.amount,
+      note: note ?? this.note,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    isLoading,
+    transferSuccess,
+    error,
+    user,
+    amount,
+    note,
+  ];
 }

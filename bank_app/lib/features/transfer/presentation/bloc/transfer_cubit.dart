@@ -10,8 +10,36 @@ import 'transfer_state.dart';
 class TransferCubit extends Cubit<TransferState> {
   final GetUserByAccount getUserByAccount;
   final MakeTransfer makeTransfer;
-
   Timer? _debounce;
+
+  TransferCubit({required this.getUserByAccount, required this.makeTransfer})
+    : super(const TransferState());
+
+  Future<void> fetchUser(String accountNumber) async {
+    try {
+      final user = await getUserByAccount(accountNumber);
+      emit(state.copyWith(user: user, error: ''));
+    } catch (e) {
+      emit(state.copyWith(error: e.toString(), user: null));
+    }
+  }
+
+  void updateAmount(String value) {
+    final amount = double.tryParse(value) ?? 0;
+    emit(state.copyWith(amount: amount));
+  }
+
+  void updateNote(String value) {
+    emit(state.copyWith(note: value));
+  }
+
+  void onAccountChanged(String value) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      fetchUser(value);
+    });
+  }
 
   @override
   Future<void> close() {
@@ -19,68 +47,30 @@ class TransferCubit extends Cubit<TransferState> {
     return super.close();
   }
 
-  TransferCubit({required this.getUserByAccount, required this.makeTransfer})
-    : super(const TransferState());
-
-  Future<void> fetchUser(String accountNumber) async {
-    if (accountNumber.isEmpty) return;
-
-    emit(state.copyWith(isLoading: true, error: null, user: null));
-
-    try {
-      final user = await getUserByAccount(accountNumber);
-
-      emit(state.copyWith(isLoading: false, user: user));
-    } catch (e) {
-      emit(state.copyWith(isLoading: false, error: e.toString()));
-    }
-  }
-
-  void updateAmount(String value) {
-    final amount = double.tryParse(value) ?? 0;
-
-    emit(state.copyWith(amount: amount));
-  }
-
-  Future<void> submitTransfer(String fromAccount) async {
+  Future<String?> submitTransfer(String fromAccount) async {
     if (state.user == null) {
-      emit(state.copyWith(error: 'No user selected'));
-      return;
+      emit(state.copyWith(error: 'User not selected'));
+      return null;
     }
 
-    if (state.user!.accountNumber == fromAccount) {
-      emit(state.copyWith(error: 'No puedes transferirte a ti mismo'));
-      return;
-    }
-
-    emit(state.copyWith(isLoading: true, error: null));
+    emit(state.copyWith(isLoading: true, error: ''));
 
     try {
       final transfer = Transfer(
         fromAccount: fromAccount,
         toAccount: state.user!.accountNumber,
         amount: state.amount,
+        note: state.note,
       );
 
-      await makeTransfer(transfer);
+      final transactionId = await makeTransfer(transfer);
 
       emit(state.copyWith(isLoading: false, transferSuccess: true));
+
+      return transactionId;
     } catch (e) {
       emit(state.copyWith(isLoading: false, error: e.toString()));
+      return null;
     }
-  }
-
-  void reset() {
-    emit(const TransferState());
-  }
-
-  void onAccountChanged(String value) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      if (value.length >= 6) {
-        fetchUser(value);
-      }
-    });
   }
 }

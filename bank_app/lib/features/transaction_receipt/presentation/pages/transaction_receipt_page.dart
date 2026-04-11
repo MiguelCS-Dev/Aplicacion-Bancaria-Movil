@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:bank_app/core/themes/app_colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,9 +16,10 @@ import '../bloc/receipt_state.dart';
 import '../widgets/receipt_card.dart';
 
 class TransactionReceiptPage extends StatelessWidget {
-  final TransactionReceipt receipt;
+  final TransactionReceipt? receipt;
+  final String? transactionId;
 
-  TransactionReceiptPage({super.key, required this.receipt});
+  TransactionReceiptPage({super.key, this.receipt, this.transactionId});
 
   final GlobalKey repaintKey = GlobalKey();
 
@@ -29,6 +31,27 @@ class TransactionReceiptPage extends StatelessWidget {
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
 
     return byteData!.buffer.asUint8List();
+  }
+
+  Future<TransactionReceipt> _loadReceipt() async {
+    final doc = await FirebaseFirestore.instance
+        .collection('transactions')
+        .doc(transactionId)
+        .get();
+
+    final data = doc.data()!;
+
+    return TransactionReceipt(
+      id: doc.id,
+      type: data['type'],
+      description: data['description'],
+      category: data['category'],
+      amount: (data['amount'] as num).toDouble(),
+      date: (data['timestamp'] as Timestamp?)?.toDate(),
+      note: data['note'],
+      recipient: data['recipient'],
+      sender: null,
+    );
   }
 
   @override
@@ -52,77 +75,86 @@ class TransactionReceiptPage extends StatelessWidget {
             },
           ),
         ),
-        body: BlocConsumer<ReceiptBloc, ReceiptState>(
-          listener: (context, state) {
-            if (state is ReceiptError) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.message)));
+        body: FutureBuilder<TransactionReceipt>(
+          future: receipt != null ? Future.value(receipt) : _loadReceipt(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
             }
-          },
-          builder: (context, state) {
-            final isLoading = state is ReceiptLoading;
 
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(height: 16),
-                  RepaintBoundary(
-                    key: repaintKey,
-                    child: ReceiptCard(receipt: receipt),
-                  ),
+            final receiptData = snapshot.data!;
 
-                  const SizedBox(height: 24),
+            return BlocConsumer<ReceiptBloc, ReceiptState>(
+              listener: (context, state) {
+                if (state is ReceiptError) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.message)));
+                }
+              },
+              builder: (context, state) {
+                final isLoading = state is ReceiptLoading;
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton.icon(
-                        onPressed: isLoading
-                            ? null
-                            : () async {
-                                final bytes = await _captureImage();
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      RepaintBoundary(
+                        key: repaintKey,
+                        child: ReceiptCard(receipt: receiptData),
+                      ),
+                      const SizedBox(height: 24),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton.icon(
+                            onPressed: isLoading
+                                ? null
+                                : () async {
+                                    final bytes = await _captureImage();
 
-                                context.read<ReceiptBloc>().add(
-                                  ShareReceiptEvent(
-                                    bytes: bytes,
-                                    receipt: receipt,
-                                  ),
-                                );
-                              },
-                        icon: isLoading
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : const Icon(Icons.share, color: Colors.white),
-                        label: Text(
-                          isLoading ? 'Preparing...' : 'Share Receipt',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                                    context.read<ReceiptBloc>().add(
+                                      ShareReceiptEvent(
+                                        bytes: bytes,
+                                        receipt: receiptData, // 👈 importante
+                                      ),
+                                    );
+                                  },
+                            icon: isLoading
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Icon(Icons.share, color: Colors.white),
+                            label: Text(
+                              isLoading ? 'Preparing...' : 'Share Receipt',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 2,
+                            ),
                           ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 2,
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 30),
+                    ],
                   ),
-                  const SizedBox(height: 30),
-                ],
-              ),
+                );
+              },
             );
           },
         ),

@@ -81,9 +81,13 @@ class AppRouter {
           path: '/receipt',
           name: 'receipt',
           builder: (context, state) {
-            final receipt = state.extra as TransactionReceipt;
+            final extra = state.extra;
 
-            return TransactionReceiptPage(receipt: receipt);
+            if (extra is String) {
+              return TransactionReceiptPage(transactionId: extra);
+            }
+
+            return TransactionReceiptPage(receipt: extra as TransactionReceipt);
           },
         ),
         GoRoute(

@@ -5,6 +5,7 @@ class TransferModel extends Transfer {
     required super.fromAccount,
     required super.toAccount,
     required super.amount,
+    super.note,
   });
 
   Map<String, dynamic> toJson() {
@@ -12,6 +13,7 @@ class TransferModel extends Transfer {
       'from_account': fromAccount,
       'to_account': toAccount,
       'amount': amount,
+      'note': note ?? '',
     };
   }
 }

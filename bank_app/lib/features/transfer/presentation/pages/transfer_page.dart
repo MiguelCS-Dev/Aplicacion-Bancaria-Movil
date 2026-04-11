@@ -25,10 +25,15 @@ class TransferPage extends StatelessWidget {
             );
           }
 
-          if (state.error != null) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.error!)));
+          if (state.error.isNotEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  state.error,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+            );
           }
         },
         builder: (context, state) {

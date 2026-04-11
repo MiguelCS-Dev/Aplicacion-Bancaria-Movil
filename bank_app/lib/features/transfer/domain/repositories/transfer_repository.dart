@@ -4,5 +4,5 @@ import '../entities/transfer.dart';
 abstract class TransferRepository {
   Future<UserAccount> getUserByAccount(String accountNumber);
 
-  Future<void> makeTransfer(Transfer transfer);
+  Future<String> makeTransfer(Transfer transfer);
 }
