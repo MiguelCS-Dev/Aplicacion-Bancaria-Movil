@@ -29,7 +29,6 @@ class ProfilePage extends StatelessWidget {
                   child: CircularProgressIndicator(color: Colors.white),
                 );
               }
-
               if (state is ProfileLoaded) {
                 final user = state.user;
 

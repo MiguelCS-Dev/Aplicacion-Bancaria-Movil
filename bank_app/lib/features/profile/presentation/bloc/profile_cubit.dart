@@ -16,8 +16,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       final user = await getUserProfile();
       emit(ProfileLoaded(user));
-    } catch (_) {
-      emit(ProfileError());
+    } catch (e) {
+      emit(ProfileError(e.toString()));
     }
   }
 
@@ -25,8 +25,12 @@ class ProfileCubit extends Cubit<ProfileState> {
     required String email,
     required String phone,
   }) async {
-    await updateUserProfile(email: email, phone: phone);
-
-    await loadProfile(); // refresca datos
+    try {
+      await updateUserProfile(email: email, phone: phone);
+      emit(ProfileUpdated());
+      await loadProfile(); // <-- agrega esto
+    } catch (e) {
+      emit(ProfileError(e.toString()));
+    }
   }
 }
