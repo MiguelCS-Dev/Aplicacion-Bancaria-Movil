@@ -11,6 +11,7 @@ class ActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(15),
+      onTap: item.onTap,
       child: Container(
         decoration: BoxDecoration(
           color: white,

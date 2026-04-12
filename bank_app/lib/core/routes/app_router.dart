@@ -14,6 +14,9 @@ import 'package:bank_app/features/transaction/presentation/bloc/transaction_cubi
 import 'package:bank_app/features/transaction/presentation/pages/transaction_page.dart';
 import 'package:bank_app/features/transaction_receipt/domain/entities/transaction_receipt.dart';
 import 'package:bank_app/features/transaction_receipt/presentation/pages/transaction_receipt_page.dart';
+import 'package:bank_app/features/transfer/presentation/bloc/transfer_cubit.dart';
+import 'package:bank_app/features/transfer/presentation/pages/transfer_page.dart';
+import 'package:bank_app/features/transfer/transfer_injection.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -78,9 +81,13 @@ class AppRouter {
           path: '/receipt',
           name: 'receipt',
           builder: (context, state) {
-            final receipt = state.extra as TransactionReceipt;
+            final extra = state.extra;
 
-            return TransactionReceiptPage(receipt: receipt);
+            if (extra is String) {
+              return TransactionReceiptPage(transactionId: extra);
+            }
+
+            return TransactionReceiptPage(receipt: extra as TransactionReceipt);
           },
         ),
         GoRoute(
@@ -114,6 +121,19 @@ class AppRouter {
             return BlocProvider.value(
               value: cubit,
               child: const EditProfilePage(),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/transfer',
+          builder: (context, state) {
+            return BlocProvider(
+              create: (_) => TransferCubit(
+                getUserByAccount: TransferInjection.getUserByAccount,
+                makeTransfer: TransferInjection.makeTransfer,
+                getCurrentUser: TransferInjection.getCurrentUser,
+              ),
+              child: TransferPage(),
             );
           },
         ),
