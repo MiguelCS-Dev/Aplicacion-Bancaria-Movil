@@ -5,11 +5,11 @@ import '../../domain/entities/user_account.dart';
 class TransferState extends Equatable {
   final bool isLoading;
   final bool transferSuccess;
-  final String error;
-
+  final String? error;
+  final String? accountError;
+  final String? amountError;
   final UserAccount? user;
   final double amount;
-
   final String note;
 
   const TransferState({
@@ -19,7 +19,18 @@ class TransferState extends Equatable {
     this.user,
     this.amount = 0,
     this.note = '',
+    this.accountError,
+    this.amountError,
   });
+
+  factory TransferState.initial() => TransferState();
+
+  bool get isValid =>
+      user != null &&
+      amount > 0 &&
+      note.length <= 20 &&
+      (accountError == null || accountError!.isEmpty) &&
+      (amountError == null || amountError!.isEmpty);
 
   TransferState copyWith({
     bool? isLoading,
@@ -28,6 +39,8 @@ class TransferState extends Equatable {
     UserAccount? user,
     double? amount,
     String? note,
+    String? accountError,
+    String? amountError,
   }) {
     return TransferState(
       isLoading: isLoading ?? this.isLoading,
@@ -36,6 +49,8 @@ class TransferState extends Equatable {
       user: user ?? this.user,
       amount: amount ?? this.amount,
       note: note ?? this.note,
+      accountError: accountError,
+      amountError: amountError,
     );
   }
 
@@ -47,5 +62,7 @@ class TransferState extends Equatable {
     user,
     amount,
     note,
+    accountError,
+    amountError,
   ];
 }

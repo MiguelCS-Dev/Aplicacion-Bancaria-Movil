@@ -6,7 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class TransferRemoteDataSource {
   Future<UserAccountModel> getUserByAccount(String accountNumber);
-  Future<String> makeTransfer(TransferModel transfer); // 👈 devuelve ID
+  Future<String> makeTransfer(TransferModel transfer);
+  Future<UserAccountModel> getCurrentUser();
 }
 
 class TransferRemoteDataSourceImpl implements TransferRemoteDataSource {
@@ -105,5 +106,16 @@ class TransferRemoteDataSourceImpl implements TransferRemoteDataSource {
     });
 
     return transactionId;
+  }
+
+  @override
+  Future<UserAccountModel> getCurrentUser() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
+    final doc = await firestore.collection('users').doc(uid).get();
+
+    final data = doc.data()!;
+
+    return UserAccountModel.fromJson(data);
   }
 }

@@ -5,4 +5,6 @@ abstract class TransferRepository {
   Future<UserAccount> getUserByAccount(String accountNumber);
 
   Future<String> makeTransfer(Transfer transfer);
+
+  Future<UserAccount> getCurrentUser();
 }

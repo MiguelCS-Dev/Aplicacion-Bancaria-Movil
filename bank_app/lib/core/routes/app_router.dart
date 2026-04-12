@@ -131,6 +131,7 @@ class AppRouter {
               create: (_) => TransferCubit(
                 getUserByAccount: TransferInjection.getUserByAccount,
                 makeTransfer: TransferInjection.makeTransfer,
+                getCurrentUser: TransferInjection.getCurrentUser,
               ),
               child: TransferPage(),
             );

@@ -1,6 +1,8 @@
 import 'package:bank_app/core/themes/inputs_decoration.dart';
 import 'package:bank_app/features/transfer/presentation/bloc/transfer_cubit.dart';
+import 'package:bank_app/features/transfer/presentation/bloc/transfer_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountInput extends StatelessWidget {
@@ -8,15 +10,19 @@ class AccountInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      keyboardType: TextInputType.number,
-      decoration: buildInputDecoration(
-        label: "Account Number",
-        icon: Icons.credit_card,
-      ),
-
-      onChanged: (value) {
-        context.read<TransferCubit>().onAccountChanged(value);
+    return BlocBuilder<TransferCubit, TransferState>(
+      builder: (context, state) {
+        return TextField(
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          decoration: buildInputDecoration(
+            label: "Account Number",
+            icon: Icons.credit_card,
+          ).copyWith(errorText: state.accountError),
+          onChanged: (value) {
+            context.read<TransferCubit>().onAccountChanged(value);
+          },
+        );
       },
     );
   }

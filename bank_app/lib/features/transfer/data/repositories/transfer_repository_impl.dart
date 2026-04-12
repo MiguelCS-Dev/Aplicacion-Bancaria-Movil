@@ -26,4 +26,9 @@ class TransferRepositoryImpl implements TransferRepository {
 
     return await remoteDataSource.makeTransfer(model);
   }
+
+  @override
+  Future<UserAccount> getCurrentUser() async {
+    return await remoteDataSource.getCurrentUser();
+  }
 }

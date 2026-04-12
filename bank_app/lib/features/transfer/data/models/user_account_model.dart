@@ -5,6 +5,7 @@ class UserAccountModel extends UserAccount {
     required super.accountNumber,
     required super.name,
     required super.phone,
+    required super.balance,
   });
 
   factory UserAccountModel.fromJson(Map<String, dynamic> json) {
@@ -12,6 +13,7 @@ class UserAccountModel extends UserAccount {
       accountNumber: json['account_number'].toString(),
       name: json['name'] ?? '',
       phone: json['phone'].toString(),
+      balance: (json['account_balance'] ?? 0).toDouble(),
     );
   }
 
