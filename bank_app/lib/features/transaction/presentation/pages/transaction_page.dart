@@ -3,6 +3,7 @@ import 'package:bank_app/features/transaction/presentation/utils/group_transacti
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:go_router/go_router.dart';
 import '../bloc/transaction_cubit.dart';
 import '../bloc/transaction_state.dart';
 import '../widgets/transaction_card.dart';
@@ -61,7 +62,7 @@ class _TransactionPageState extends State<TransactionPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: white),
           onPressed: () {
-            Navigator.pop(context);
+            context.go('/home');
           },
         ),
       ),

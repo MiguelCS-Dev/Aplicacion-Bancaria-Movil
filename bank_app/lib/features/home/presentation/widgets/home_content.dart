@@ -12,31 +12,33 @@ class HomePageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        HeaderSection(userName: userName),
-        BlocBuilder<HomeCubit, HomeState>(
-          builder: (context, state) {
-            if (state is HomeLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          HeaderSection(userName: userName),
+          BlocBuilder<HomeCubit, HomeState>(
+            builder: (context, state) {
+              if (state is HomeLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            if (state is HomeLoaded) {
-              final user = state.user;
+              if (state is HomeLoaded) {
+                final user = state.user;
 
-              return BankCardWidget(
-                balance: "\$${user.balance}",
-                cardNumber: user.accountNumber,
-                cardHolder: user.name,
-                expiryDate: "12/26",
-              );
-            }
+                return BankCardWidget(
+                  balance: "\$${user.balance}",
+                  cardNumber: user.accountNumber,
+                  cardHolder: user.name,
+                  expiryDate: "12/26",
+                );
+              }
 
-            return const SizedBox();
-          },
-        ),
-        TransactionHistorySection(),
-      ],
+              return const SizedBox();
+            },
+          ),
+          TransactionHistorySection(),
+        ],
+      ),
     );
   }
 }

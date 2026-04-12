@@ -5,6 +5,7 @@ import 'package:bank_app/features/transfer/presentation/widgets/note_input.dart'
 import 'package:bank_app/features/transfer/presentation/widgets/transfer_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../widgets/account_input.dart';
 import '../widgets/user_preview_card.dart';
@@ -54,7 +55,7 @@ class TransferPage extends StatelessWidget {
                           child: IconButton(
                             icon: const Icon(Icons.arrow_back, color: white),
                             onPressed: () {
-                              Navigator.pop(context);
+                              context.go('/home');
                             },
                           ),
                         ),
