@@ -63,8 +63,7 @@ class TransferRemoteDataSourceImpl implements TransferRemoteDataSource {
         throw Exception('Insufficient balance');
       }
 
-      if (fromData['account_number'].toString() ==
-          toData['account_number'].toString()) {
+      if (uid == toDoc.id) {
         throw Exception('Cannot transfer to yourself');
       }
 

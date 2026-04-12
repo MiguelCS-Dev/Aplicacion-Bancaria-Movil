@@ -1,5 +1,8 @@
+import 'package:bank_app/core/themes/app_colors.dart';
 import 'package:bank_app/features/transfer/presentation/bloc/transfer_cubit.dart';
 import 'package:bank_app/features/transfer/presentation/bloc/transfer_state.dart';
+import 'package:bank_app/features/transfer/presentation/widgets/note_input.dart';
+import 'package:bank_app/features/transfer/presentation/widgets/transfer_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,57 +12,89 @@ import '../widgets/amount_input.dart';
 import '../widgets/transfer_button.dart';
 
 class TransferPage extends StatelessWidget {
-  final String fromAccount;
-
-  const TransferPage({super.key, required this.fromAccount});
+  const TransferPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Transferencia')),
-      body: BlocConsumer<TransferCubit, TransferState>(
-        listener: (context, state) {
-          if (state.transferSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Transferencia exitosa')),
-            );
-          }
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [secondary, primary],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SafeArea(
+          child: BlocBuilder<TransferCubit, TransferState>(
+            builder: (context, state) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_back, color: white),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                      const TransferHeader(),
 
-          if (state.error.isNotEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  state.error,
-                  style: const TextStyle(color: Colors.red),
+                      const SizedBox(height: 30),
+
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 20,
+                              color: Colors.black.withValues(alpha: 0.1),
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            const AccountInput(),
+
+                            const SizedBox(height: 16),
+
+                            UserPreviewCard(state: state),
+
+                            const SizedBox(height: 16),
+
+                            const AmountInput(),
+
+                            const SizedBox(height: 16),
+
+                            const TransferNoteField(),
+
+                            const SizedBox(height: 24),
+
+                            TransferButton(state: state),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                AccountInput(),
-
-                const SizedBox(height: 16),
-
-                if (state.isLoading) const CircularProgressIndicator(),
-
-                if (state.user != null) UserPreviewCard(user: state.user!),
-
-                const SizedBox(height: 16),
-
-                AmountInput(),
-
-                const Spacer(),
-
-                TransferButton(fromAccount: fromAccount),
-              ],
-            ),
-          );
-        },
+              );
+            },
+          ),
+        ),
       ),
     );
   }

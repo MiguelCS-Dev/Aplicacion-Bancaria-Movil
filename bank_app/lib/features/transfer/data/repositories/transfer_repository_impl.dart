@@ -19,7 +19,6 @@ class TransferRepositoryImpl implements TransferRepository {
   @override
   Future<String> makeTransfer(Transfer transfer) async {
     final model = TransferModel(
-      fromAccount: transfer.fromAccount,
       toAccount: transfer.toAccount,
       amount: transfer.amount,
       note: transfer.note,

@@ -132,7 +132,7 @@ class AppRouter {
                 getUserByAccount: TransferInjection.getUserByAccount,
                 makeTransfer: TransferInjection.makeTransfer,
               ),
-              child: const TransferPage(fromAccount: '999999'),
+              child: TransferPage(),
             );
           },
         ),

@@ -1,3 +1,4 @@
+import 'package:bank_app/core/themes/inputs_decoration.dart';
 import 'package:bank_app/features/transfer/presentation/bloc/transfer_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,11 +9,11 @@ class AmountInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      decoration: const InputDecoration(
-        labelText: 'Monto',
-        border: OutlineInputBorder(),
-      ),
       keyboardType: TextInputType.number,
+      decoration: buildInputDecoration(
+        label: "Amount",
+        icon: Icons.attach_money,
+      ),
       onChanged: (value) {
         context.read<TransferCubit>().updateAmount(value);
       },

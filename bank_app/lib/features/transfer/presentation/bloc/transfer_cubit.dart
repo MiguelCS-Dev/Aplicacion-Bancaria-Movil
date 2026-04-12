@@ -47,7 +47,7 @@ class TransferCubit extends Cubit<TransferState> {
     return super.close();
   }
 
-  Future<String?> submitTransfer(String fromAccount) async {
+  Future<String?> submitTransfer() async {
     if (state.user == null) {
       emit(state.copyWith(error: 'User not selected'));
       return null;
@@ -57,7 +57,6 @@ class TransferCubit extends Cubit<TransferState> {
 
     try {
       final transfer = Transfer(
-        fromAccount: fromAccount,
         toAccount: state.user!.accountNumber,
         amount: state.amount,
         note: state.note,

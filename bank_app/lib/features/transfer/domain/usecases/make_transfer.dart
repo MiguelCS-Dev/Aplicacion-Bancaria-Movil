@@ -11,10 +11,6 @@ class MakeTransfer {
       throw Exception('Amount must be greater than 0');
     }
 
-    if (transfer.fromAccount == transfer.toAccount) {
-      throw Exception('Cannot transfer to the same account');
-    }
-
     return await repository.makeTransfer(transfer);
   }
 }
