@@ -14,41 +14,51 @@ class TransactionRowData extends StatelessWidget {
     final color = isDebit ? Colors.red : Colors.green;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(14),
             ),
-            child: Icon(icon, color: color),
+            child: Icon(icon, color: color, size: 20),
           ),
-          const SizedBox(width: 15),
+          const SizedBox(width: 14),
 
-          /// detalles
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   transaction.description,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   transaction.category,
-                  style: TextStyle(color: Colors.grey[600]),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
                 ),
               ],
             ),
           ),
 
-          /// monto
-          Text(
-            '${isDebit ? '-' : '+'}\$${transaction.amount.toStringAsFixed(2)}',
-            style: TextStyle(color: color, fontWeight: FontWeight.bold),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: isDebit
+                  ? Colors.red.withValues(alpha: 0.08)
+                  : Colors.green.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              '${isDebit ? '-' : '+'}\$${transaction.amount.toStringAsFixed(2)}',
+              style: TextStyle(color: color, fontWeight: FontWeight.w700),
+            ),
           ),
         ],
       ),

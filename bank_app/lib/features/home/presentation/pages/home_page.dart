@@ -1,3 +1,4 @@
+import 'package:bank_app/core/themes/app_colors.dart';
 import 'package:bank_app/features/home/presentation/bloc/home_cubit.dart';
 import 'package:bank_app/features/profile/data/datasources/firebase_profile_datasource.dart';
 import 'package:bank_app/features/profile/data/repositories/profile_repository_impl.dart';
@@ -71,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ],
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 231, 231, 231),
+        backgroundColor: white,
         appBar: AppBar(
           toolbarHeight: 0,
           elevation: 0,
