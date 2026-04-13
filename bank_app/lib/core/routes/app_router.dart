@@ -7,6 +7,9 @@ import 'package:bank_app/features/profile/domain/usecases/update_user_profile.da
 import 'package:bank_app/features/profile/presentation/bloc/profile_cubit.dart';
 import 'package:bank_app/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:bank_app/features/profile/presentation/pages/profile_page.dart';
+import 'package:bank_app/features/settings/presentation/pages/general_page.dart';
+import 'package:bank_app/features/settings/presentation/pages/more_page.dart';
+import 'package:bank_app/features/settings/presentation/pages/security_page.dart';
 import 'package:bank_app/features/transaction/data/datasources/firebase_transaction_database.dart';
 import 'package:bank_app/features/transaction/data/repositories/transaction_repository_impl.dart';
 import 'package:bank_app/features/transaction/domain/usecases/get_transaction.dart';
@@ -136,6 +139,18 @@ class AppRouter {
               child: TransferPage(),
             );
           },
+        ),
+        GoRoute(
+          path: '/settings',
+          builder: (context, state) => const MorePage(),
+        ),
+        GoRoute(
+          path: '/settings/security',
+          builder: (_, _) => const SecurityPage(),
+        ),
+        GoRoute(
+          path: '/settings/general',
+          builder: (_, _) => const GeneralPage(),
         ),
       ],
     );
