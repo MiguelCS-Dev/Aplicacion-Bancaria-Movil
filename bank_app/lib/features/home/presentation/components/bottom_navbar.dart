@@ -9,15 +9,19 @@ class BottomNavbar extends StatelessWidget {
   Widget build(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         boxShadow: [
-          BoxShadow(color: Colors.black, blurRadius: 10, offset: Offset(0, -2)),
+          BoxShadow(
+            color: secondary.withValues(alpha: 0.6),
+            blurRadius: 10,
+            offset: Offset(0, -2),
+          ),
         ],
       ),
       child: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         notchMargin: 10,
-        color: white,
+        color: primary,
         child: SizedBox(
           height: 65,
           child: Row(
@@ -40,9 +44,9 @@ class BottomNavbar extends StatelessWidget {
               const SizedBox(width: 40),
               _buildItem(
                 context: context,
-                icon: Icons.folder,
-                label: 'Apply',
-                route: '/apply',
+                icon: Icons.swap_horiz,
+                label: 'Transfer',
+                route: '/transfer',
                 currentRoute: location,
               ),
               _buildItem(
@@ -71,7 +75,9 @@ class BottomNavbar extends StatelessWidget {
     required String currentRoute,
   }) {
     final isSelected = currentRoute == route;
-    final color = isSelected ? primary : Colors.grey;
+    final color = isSelected
+        ? Colors.white
+        : Colors.white.withValues(alpha: 0.8);
 
     return InkWell(
       onTap: () => _goTo(context, route),
@@ -79,7 +85,7 @@ class BottomNavbar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: color),
-          Text(label, style: TextStyle(color: color)),
+          Text(label, style: TextStyle(color: color, fontSize: 12)),
         ],
       ),
     );

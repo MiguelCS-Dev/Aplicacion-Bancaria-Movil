@@ -2,7 +2,6 @@ import 'package:bank_app/features/home/presentation/bloc/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:bank_app/features/home/presentation/widgets/header_content.dart';
 import 'package:bank_app/features/home/presentation/widgets/bank_card.dart';
-import 'package:bank_app/features/home/presentation/widgets/action_grid.dart';
 import 'package:bank_app/features/home/presentation/widgets/transaction_section.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,7 +36,6 @@ class HomePageContent extends StatelessWidget {
               return const SizedBox();
             },
           ),
-          ActionGridSection(),
           TransactionHistorySection(),
         ],
       ),

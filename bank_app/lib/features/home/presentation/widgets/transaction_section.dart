@@ -16,74 +16,78 @@ class TransactionHistorySection extends StatelessWidget {
     final user = FirebaseAuth.instance.currentUser;
 
     return Container(
-      color: white,
-      margin: const EdgeInsets.only(top: 4),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Column(
-          children: [
-            _buildSectionHeader(context),
-            const SizedBox(height: 10),
+      margin: const EdgeInsets.only(top: 12),
+      padding: const EdgeInsets.only(top: 8),
+      decoration: const BoxDecoration(
+        color: white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 6),
 
-            BlocBuilder<TransactionCubit, TransactionState>(
-              builder: (context, state) {
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    if (user != null) {
-                      await context.read<TransactionCubit>().refresh(user.uid);
-                    }
-                  },
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: _buildSectionHeader(context),
+          ),
 
-                  child: _buildContent(state),
-                );
-              },
-            ),
-          ],
-        ),
+          const SizedBox(height: 10),
+
+          BlocBuilder<TransactionCubit, TransactionState>(
+            builder: (context, state) {
+              return RefreshIndicator(
+                color: primary,
+                backgroundColor: white,
+                onRefresh: () async {
+                  if (user != null) {
+                    await context.read<TransactionCubit>().refresh(user.uid);
+                  }
+                },
+                child: _buildContent(state),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildContent(TransactionState state) {
-    if (state is TransactionLoading) {
-      return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        shrinkWrap: true,
-        children: List.generate(3, (_) => const TransactionRow()),
+    Widget wrap(List<Widget> children) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: ListView(
+          primary: false,
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          children: children,
+        ),
       );
     }
 
+    if (state is TransactionLoading) {
+      return wrap(List.generate(3, (_) => const TransactionRow()));
+    }
+
     if (state is TransactionError) {
-      return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        shrinkWrap: true,
-        children: const [
-          SizedBox(height: 80),
-          Center(child: Text('Error loading transactions')),
-        ],
-      );
+      return wrap(const [
+        SizedBox(height: 80),
+        Center(child: Text('Error loading transactions')),
+      ]);
     }
 
     if (state is TransactionLoaded) {
       final transactions = state.transactions.take(3).toList();
 
       if (transactions.isEmpty) {
-        return ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          shrinkWrap: true,
-          children: const [
-            SizedBox(height: 80),
-            Center(child: Text('No transactions yet')),
-          ],
-        );
+        return wrap(const [
+          SizedBox(height: 80),
+          Center(child: Text('No transactions yet')),
+        ]);
       }
 
-      return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        shrinkWrap: true,
-        children: transactions
-            .map((tx) => TransactionRowData(transaction: tx))
-            .toList(),
+      return wrap(
+        transactions.map((tx) => TransactionRowData(transaction: tx)).toList(),
       );
     }
 

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../data/repositories/receipt_repository_impl.dart';
 import '../../data/services/receipt_share_service.dart';
@@ -71,7 +72,7 @@ class TransactionReceiptPage extends StatelessWidget {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: white),
             onPressed: () {
-              Navigator.pop(context);
+              context.go('/transactions');
             },
           ),
         ),
