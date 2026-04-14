@@ -15,7 +15,6 @@ import '../bloc/account_state.dart';
 import '../widgets/account_header.dart';
 import '../widgets/profile_section.dart';
 import '../widgets/invite_friends.dart';
-import '../widgets/menu_list.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -111,8 +110,6 @@ class _AccountContent extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           const InviteFriends(),
-          const SizedBox(height: 20),
-          const MenuList(),
           const SizedBox(height: 20),
         ],
       ),

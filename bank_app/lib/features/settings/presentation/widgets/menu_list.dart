@@ -9,9 +9,17 @@ class MenuList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -19,6 +27,7 @@ class MenuList extends StatelessWidget {
             context,
             icon: Icons.person_outline,
             title: 'My Profile',
+            subtitle: 'View and edit your personal info',
             onTap: () => context.push('/profile'),
           ),
           _divider(),
@@ -26,6 +35,7 @@ class MenuList extends StatelessWidget {
             context,
             icon: Icons.receipt_long_outlined,
             title: 'Transaction History',
+            subtitle: 'See all your past transactions',
             onTap: () => context.push('/transactions'),
           ),
           _divider(),
@@ -33,14 +43,16 @@ class MenuList extends StatelessWidget {
             context,
             icon: Icons.security_outlined,
             title: 'Security Settings',
-            onTap: () => context.push('/security'),
+            subtitle: 'Manage PIN, biometrics & more',
+            onTap: () => context.push('/settings/security'),
           ),
           _divider(),
           _item(
             context,
             icon: Icons.settings_outlined,
             title: 'General Settings',
-            onTap: () {},
+            subtitle: 'App preferences and configurations',
+            onTap: () => context.push('/settings/general'),
           ),
         ],
       ),
@@ -51,25 +63,45 @@ class MenuList extends StatelessWidget {
     BuildContext context, {
     required IconData icon,
     required String title,
+    required String subtitle,
     required VoidCallback onTap,
   }) {
     return InkWell(
+      borderRadius: BorderRadius.circular(20),
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: primary),
             ),
             const SizedBox(width: 15),
-            Expanded(child: Text(title)),
-            const Icon(Icons.arrow_forward_ios, size: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16.5,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(fontSize: 13.5, color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios, size: 14),
           ],
         ),
       ),
@@ -77,9 +109,9 @@ class MenuList extends StatelessWidget {
   }
 
   Widget _divider() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Divider(height: 1),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Divider(color: Colors.grey[200]),
     );
   }
 }

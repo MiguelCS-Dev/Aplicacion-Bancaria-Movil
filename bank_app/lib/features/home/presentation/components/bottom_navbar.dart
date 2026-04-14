@@ -53,7 +53,7 @@ class BottomNavbar extends StatelessWidget {
                 context: context,
                 icon: Icons.more_horiz,
                 label: 'More',
-                route: '/more',
+                route: '/settings',
                 currentRoute: location,
               ),
             ],
