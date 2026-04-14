@@ -28,6 +28,7 @@ class SecuritySetts extends StatelessWidget {
                     'Update your current password to keep your account secure',
               ),
               SettingsDivider(),
+
               SettingsItem(
                 icon: Icons.pin_outlined,
                 title: 'PIN Security',
@@ -35,6 +36,7 @@ class SecuritySetts extends StatelessWidget {
                 hasSwitch: true,
               ),
               SettingsDivider(),
+
               SettingsItem(
                 icon: Icons.verified_user_outlined,
                 title: 'Two-Factor Authentication',
@@ -42,6 +44,7 @@ class SecuritySetts extends StatelessWidget {
                 hasSwitch: true,
               ),
               SettingsDivider(),
+
               SettingsItem(
                 icon: Icons.fingerprint,
                 title: 'Biometric Authentication',
@@ -49,6 +52,7 @@ class SecuritySetts extends StatelessWidget {
                 hasSwitch: true,
               ),
               SettingsDivider(),
+
               SettingsItem(
                 icon: Icons.quiz_outlined,
                 title: 'Security Questions',
@@ -56,6 +60,7 @@ class SecuritySetts extends StatelessWidget {
                 hasSwitch: true,
               ),
               SettingsDivider(),
+
               SettingsItem(
                 icon: Icons.history,
                 title: 'Login History',
