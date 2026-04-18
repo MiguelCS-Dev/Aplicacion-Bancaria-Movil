@@ -27,10 +27,10 @@ Este proyecto fue creado como parte de mi portafolio para demostrar conocimiento
 
 Puedes usar los siguientes usuarios para probar la app:
 
-| Usuario | Email             | Password |
-|--------|------------------|----------|
-| Tester | tester@test.com  | 123456   |
-| Demo   | demo@demo.com    | 123456   |
+| Usuario | Email            | Password | Número de cuenta  |
+|--------|------------------|----------|-------------------|
+| Tester | tester@test.com  | 123456   | 4000471802303427  |
+| Demo   | demo@demo.com    | 123456   | 4972356264533563  |
 
 También puedes registrarte con nuevos usuarios si lo prefieres.
 
@@ -96,6 +96,8 @@ El archivo se genera en:
 ```bash
 build/app/outputs/flutter-apk/app-release.apk
 ```
+
+👉 [Descargar APK](https://github.com/yo-usuario/Aplicacion-Bancaria-Movil/releases/download/v1.0.0/banking-app-v1.0.apk)
 
 
 
